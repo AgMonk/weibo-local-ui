@@ -15,6 +15,9 @@ export default {
         method(state, payload) {
 
         },
+        clearTimeline(state, gid) {
+            state.friendsTimeline[`${gid}`] = {data: []}
+        },
     },
     actions: {
         method: ({dispatch, commit, state}, payload) => {
@@ -42,6 +45,7 @@ export default {
                 timeline.data = distinctById(timeline.data)
                 timeline.data.sort((a, b) => b.content.timestamp.create.time - a.content.timestamp.create.time)
                 console.log(data)
+                return data
             })
         },
         getFirstTimeline: ({dispatch, commit, state}, listId) => {

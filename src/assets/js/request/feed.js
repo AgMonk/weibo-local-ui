@@ -105,6 +105,8 @@ export const parseStatues = (item) => {
         timestamp,
         source,
         counts,
+        blog,
+        pictures
     }
     //作者
     const author = {

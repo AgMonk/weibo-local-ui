@@ -1,5 +1,5 @@
 <template>
- <div style="color:white">
+ <div style="color:white" >
    <el-container direction="horizontal">
      <el-aside width="50px" v-if="!disableAvatar">
 <!--       todo 头像-->
@@ -7,8 +7,12 @@
      </el-aside>
      <el-main style="text-align: left">
 <!--      微博名 -->
-         <h4>{{data.author.name}}</h4>
+         <b>{{data.author.name}}</b>
 <!--      时间 来自 -->
+       <div class="common-text">
+         <span >{{data.content.timestamp.create.before || data.content.timestamp.create.datetime}}</span>
+         <span v-if="data.content.source"> 来自：{{data.content.source}}</span>
+       </div>
 <!--       正文-->
 <!--       媒体-->
 <!--       转发、评论、点赞-->
