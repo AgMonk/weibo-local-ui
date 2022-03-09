@@ -45,11 +45,11 @@ export default {
             })
         },
         getFirstTimeline: ({dispatch, commit, state}, listId) => {
-            return dispatch('getFriendsTimeline',{listId})
+            return dispatch('getFriendsTimeline',{listId,count:20})
         },
         getMoreTimeline: ({dispatch, commit, state}, listId) => {
             const timeline = state.friendsTimeline[`${listId}`]
-            return dispatch('getFriendsTimeline',{maxId:timeline.maxId,listId})
+            return dispatch('getFriendsTimeline',{maxId:timeline.maxId,listId,count:20})
         }
 
     },
