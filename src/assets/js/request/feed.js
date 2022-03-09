@@ -38,7 +38,7 @@ export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, ref
         }
     }).then(res => {
         const {max_id, since_id, statuses} = res
-        console.log(statuses)
+        // console.log(statuses)
         const data = statuses.map(item => parseStatues(item))
 
         return {
@@ -48,19 +48,29 @@ export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, ref
 }
 
 
-
-
-
 //解析单条状态数据
-export const parseStatues =(item) =>{
+export const parseStatues = (item) => {
     //todo 编辑时间
-    const {created_at, id, isLongText, mblogid, mblogtype, mlevel, pic_focus_point, pic_infos, pic_num, source, textLength, text_raw, url_struct, visible, user,retweeted_status} = item
-
-    const content = {
+    const {
+        created_at,
+        id,
         isLongText,
-        text: text_raw,
-        length: textLength,
-    }
+        mblogid,
+        mblogtype,
+        mlevel,
+        pic_focus_point,
+        pic_infos,
+        pic_num,
+        source,
+        textLength,
+        text_raw,
+        url_struct,
+        visible,
+        user,
+        retweeted_status
+    } = item
+
+
 
     //todo 意义未明
     const blog = {
@@ -79,30 +89,41 @@ export const parseStatues =(item) =>{
         create: new Date(created_at).toObj()
     }
 
+
+    const content = {
+        isLongText,
+        text: text_raw,
+        length: textLength,
+        timestamp,
+        source,
+    }
     //作者
     const author = {
         id: user.id,
-        name:user.screen_name,
-        avatars:{
-            small:user.profile_image_url,
-            large:user.avatar_large,
-            hd:user.avatar_hd,
+        name: user.screen_name,
+        avatars: {
+            small: user.profile_image_url,
+            large: user.avatar_large,
+            hd: user.avatar_hd,
         },
-        followMe:user.follow_me,
-        following:user.following,
-        rank:user.mbrank,
-        type:user.mbtype,
-        iconList:user.icon_list,
+        followMe: user.follow_me,
+        following: user.following,
+        rank: user.mbrank,
+        type: user.mbtype,
+        iconList: user.icon_list,
     }
 
 
     const data = {
         //todo
-        visible,
-        id, timestamp, content, source,author,authorId:author.id
+        // visible,
+        id,
+        content,
+        author,
+        authorId: author.id
     };
 
-    if (retweeted_status){
+    if (retweeted_status) {
         data.retweeted = parseStatues(retweeted_status)
     }
     return data

@@ -66,7 +66,6 @@ export default {
       this.getAllGroups(force).then(res => {
         this.groups = res.filter(res => res.data && res.data.length > 0);
         this.loading = false;
-        console.log(this.groups)
         if (this.$route.name==='我的分组'){
           this.$router.push(this.findIndexByTitle(this.defaultTitle))
         }
