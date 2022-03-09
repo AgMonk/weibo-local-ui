@@ -10,7 +10,6 @@
       </el-main>
       </el-container>
     </el-main>
-    <el-footer>《footer》</el-footer>
   </el-container>
 
 </template>

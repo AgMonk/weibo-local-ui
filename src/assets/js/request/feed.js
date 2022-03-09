@@ -38,7 +38,7 @@ export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, ref
         }
     }).then(res => {
         const {max_id, since_id, statuses} = res
-        // console.log(statuses)
+        console.log(statuses)
         const data = statuses.map(item => parseStatues(item))
 
         return {
@@ -67,10 +67,18 @@ export const parseStatues = (item) => {
         url_struct,
         visible,
         user,
-        retweeted_status
+        retweeted_status,
+        reposts_count,
+        attitudes_count,
+        comments_count,
     } = item
 
-
+    //数量
+    const counts = {
+        reposts: reposts_count,
+        attitudes: attitudes_count,
+        comments: comments_count,
+    }
 
     //todo 意义未明
     const blog = {
@@ -96,6 +104,7 @@ export const parseStatues = (item) => {
         length: textLength,
         timestamp,
         source,
+        counts,
     }
     //作者
     const author = {
