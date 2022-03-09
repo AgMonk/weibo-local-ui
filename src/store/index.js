@@ -1,4 +1,6 @@
 import { createStore } from 'vuex'
+import Loading from "@/store/Loading";
+import Groups from "@/store/Groups";
 
 export default createStore({
   state: {
@@ -8,5 +10,6 @@ export default createStore({
   actions: {
   },
   modules: {
+    Loading,Groups,
   }
 })

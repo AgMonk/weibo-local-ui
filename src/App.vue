@@ -1,9 +1,17 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="app">
+    <div id="nav">
+      <my-navigation />
+      <div style="text-align: left;margin:2px 0">
+        <el-button size="small" type="primary" @click="back">&lt;</el-button>
+        <el-button size="small" type="primary" @click="forward">></el-button>
+        <el-button v-if="$route.query.from" size="small" type="primary" @click="$router.push($route.query.from)">↑</el-button>
+      </div>
+    </div>
+    <router-view />
+    <el-backtop />
+    <el-link href="" target="bland" type="primary">Github</el-link>
   </div>
-  <router-view/>
 </template>
 
 <style>
@@ -16,7 +24,7 @@
 }
 
 #nav {
-  padding: 30px;
+  /*padding: 30px;*/
 }
 
 #nav a {
@@ -28,3 +36,17 @@
   color: #42b983;
 }
 </style>
+<script>
+import MyNavigation from "@/components/common/my-navigation";
+export default {
+  components: {MyNavigation},
+  methods: {
+    back() {
+      history.back();
+    },
+    forward() {
+      history.forward()
+    },
+  }
+}
+</script>

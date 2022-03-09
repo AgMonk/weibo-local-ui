@@ -44,5 +44,5 @@ function validateStatus(status) {
 
 
 export const setTitle = (title)=>{
-    document.title = `${title} - PLU`
+    document.title = `${title} - WeiboLU`
 }
