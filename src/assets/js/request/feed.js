@@ -1,20 +1,19 @@
 import {wbGetRequest} from "@/assets/js/request/request";
 
 
-export const getAllGroups =() =>{
+export const getAllGroups = () => {
     return wbGetRequest({
-        url:'/feed/allGroups',
-        params:{
-            is_new_segment:1,
-            fetch_hot:1,
+        url: '/feed/allGroups',
+        params: {
+            is_new_segment: 1,
+            fetch_hot: 1,
         }
-    }).then(res=>{
-        const groups = res.groups
-        console.log(groups)
-        return groups
-    }).then(res=>res.map(group=>{
-        const {title,group_type,priority} = group
-        const data = group.group.map(item=> ({
+    }).then(res => {
+        // console.log(res.groups)
+        return res.groups
+    }).then(res => res.map(group => {
+        const {title, group_type, priority} = group
+        const data = group.group.map(item => ({
             gid: Number(item.gid),
             // uid: Number(item.uid),
             type: Number(item.type),
@@ -23,6 +22,88 @@ export const getAllGroups =() =>{
             isUnread: item.is_unread
         }))
 
-        return {title,type:group_type,priority,data}
+        return {title, type: group_type, priority, data}
     }))
+}
+
+export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, refresh = 4}) => {
+    return wbGetRequest({
+        url: '/feed/friendstimeline',
+        params: {
+            list_id: listId,
+            since_id: sinceId,
+            max_id: maxId,
+            fid: fid ? fid : listId,
+            count, refresh,
+        }
+    }).then(res => {
+        const {max_id, since_id, statuses} = res
+        console.log(statuses)
+        const data = statuses.map(item => parseStatues(item))
+
+        return {
+            maxId: max_id, sinceId: since_id, data
+        }
+    })
+}
+
+
+
+
+
+//解析单条状态数据
+export const parseStatues =(item) =>{
+    //todo 编辑时间
+    const {created_at, id, isLongText, mblogid, mblogtype, mlevel, pic_focus_point, pic_infos, pic_num, source, textLength, text_raw, url_struct, visible, user,retweeted_status} = item
+
+    const content = {
+        isLongText,
+        text: text_raw,
+        length: textLength,
+    }
+
+    //todo 意义未明
+    const blog = {
+        uuid: mblogid,
+        type: mblogtype,
+        level: mlevel,
+    }
+
+    //todo
+    const pictures = {
+        num: pic_num,
+        pic_infos, pic_focus_point
+    }
+
+    const timestamp = {
+        create: new Date(created_at).toObj()
+    }
+
+    //作者
+    const author = {
+        id: user.id,
+        name:user.screen_name,
+        avatars:{
+            small:user.profile_image_url,
+            large:user.avatar_large,
+            hd:user.avatar_hd,
+        },
+        followMe:user.follow_me,
+        following:user.following,
+        rank:user.mbrank,
+        type:user.mbtype,
+        iconList:user.icon_list,
+    }
+
+
+    const data = {
+        //todo
+        visible,
+        id, timestamp, content, source,author,authorId:author.id
+    };
+
+    if (retweeted_status){
+        data.retweeted = parseStatues(retweeted_status)
+    }
+    return data
 }

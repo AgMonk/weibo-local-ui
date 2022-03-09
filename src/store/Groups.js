@@ -2,12 +2,13 @@
 // noinspection JSUnusedLocalSymbols
 
 import {getCacheByTime} from "@/assets/js/utils/CacheUtils";
-import {getAllGroups} from "@/assets/js/request/feed";
+import {getAllGroups, getFriendsTimeline} from "@/assets/js/request/feed";
 
 export default {
     namespaced: true,
     state: {
         groups:{},
+        friendsTimeline:[],
     },
     mutations: {
         method(state, payload) {
@@ -26,6 +27,8 @@ export default {
                 seconds: 30 * 60,
                 force,
             })
+        },
+        getFriendsTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4,clearCache}) => {
         },
     },
     getters: {},

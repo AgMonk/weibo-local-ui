@@ -67,3 +67,23 @@ Date.prototype.getTimeSeconds = function () {
 Date.prototype.withUnixSeconds = function (time) {
     return new Date(time * 1000)
 }
+
+Date.prototype.toObj = function () {
+    const res = {
+        time: this.getTimeSeconds(),
+        datetime: this.toDateTime(),
+        date: this.toDate(),
+    };
+    const range = new Date().getTimeSeconds() - this.getTimeSeconds();
+    if (range < 60) {
+        res.before = `${range}秒前`;
+    } else if (range < 60 * 60) {
+        res.before = `${Math.floor(range / 60)}分钟前`;
+    } else if (range < 60 * 60 * 24) {
+        res.before = `${Math.floor(range / 60 / 6) / 10}小时前`;
+    } else {
+        res.before = `${Math.floor(range / 60 / 6 / 24) / 10}天前`;
+    }
+
+    return res
+}
