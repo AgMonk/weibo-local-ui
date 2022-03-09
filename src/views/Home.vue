@@ -8,11 +8,17 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
+import {getAllGroups} from "@/assets/js/request/feed";
 
 export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  mounted() {
+    getAllGroups().then(res=>{
+      console.log(res);
+    })
   }
 }
 </script>
