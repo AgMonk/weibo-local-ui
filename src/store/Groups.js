@@ -47,12 +47,11 @@ export default {
                 }
                 console.log(contents)
 
-                //todo 保存作者信息
-                console.log(authors[0])
+                //保存作者信息
                 authors.forEach(user => commit('User/saveUser2Cache', user, {root: true}));
-
                 // 保存动态信息
                 contents.forEach(i => commit('saveContent2Cache', i))
+                // 保存转发动态信息
                 if (retweeted) {
                     retweeted.forEach(i => commit('saveContent2Cache', i))
                 }

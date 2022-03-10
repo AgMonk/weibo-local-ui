@@ -75,7 +75,7 @@ const parse = (item) => {
         pic_num,
         source,
         textLength,
-        text_raw,
+        text_raw, text,
         url_struct,
         visible,
         user,
@@ -100,10 +100,24 @@ const parse = (item) => {
     }
 
     //todo
-    const pictures = {
-        num: pic_num,
-        pic_infos, pic_focus_point
-    }
+    const pictures = !pic_infos ? [] : Object.keys(pic_infos).map(i => pic_infos[i]).map(item => {
+        const {thumbnail, bmiddle, large, original, largest, mw2000, focus_point, object_id, pic_id, photo_tag, type, pic_status} = item
+        const clean = (url) =>url.replace('https:/','').replace('.sinaimg.cn','');
+        const urls = {
+            thumbnail: clean(thumbnail.url),
+            bmiddle: clean(bmiddle.url),
+            large: clean(large.url),
+            original: clean(original.url),
+            largest: clean(largest.url),
+            mw2000: clean(mw2000.url),
+
+        }
+        return {
+            id:pic_id,
+            type,status:pic_status,
+            urls,
+        }
+    })
 
     const timestamp = {
         create: new Date(created_at).toObj()
@@ -116,6 +130,7 @@ const parse = (item) => {
 
         isLongText,
         text: text_raw,
+        textHtml: text,
         length: textLength,
         timestamp,
         source,
