@@ -72,9 +72,9 @@ export default {
     load(route) {
       this.loadingMore = true
       this.getFirstTimeline(this.getParams(route)).then(res => {
-        this.$refs['scrollbar'].setScrollTop(0)
         this.data = res;
         this.$nextTick(() => this.loadingMore = false)
+        this.$nextTick(() => this.$refs['scrollbar'].setScrollTop(0))
       })
     }
   },

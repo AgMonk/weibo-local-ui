@@ -18,7 +18,6 @@ export default {
         saveUser2Cache(state, user) {
             const key = getUserKey(user.id)
             state.cache[key] = user;
-            state.map[user.name] = user.id;
         },
 
     },
