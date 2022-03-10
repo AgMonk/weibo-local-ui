@@ -42,6 +42,12 @@
               </div>
             </el-link>
           </div>
+          <div v-if="pageInfo.type==='live'">
+            <el-link :href="`https://weibo.com/l/wblive/p/show/${pageInfo.objectId}`" target="_blank">
+              <el-image :src="pageInfo.backgroundImage" />
+            </el-link>
+          </div>
+
         </div>
         <!--       图片-->
         <div v-if="data.pictures &&  data.pictures.length>0">

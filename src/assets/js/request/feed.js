@@ -169,14 +169,20 @@ const parse = (item) => {
     }
 
     if (page_info) {
-        const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4} = page_info
-        content.pageInfo = {
+        const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4, type_icon, object_id, media_info} = page_info
+        const info = {
             type: object_type,
             id: page_id,
             backgroundImage: replaceImageUrl(page_pic),
+            typeIcon: type_icon,
             authorId: author_id,
+            objectId: object_id,
             content: [content1, content2, content3, content4]
+        };
+        if (media_info) {
+            info.streamUrl = media_info.stream_url
         }
+        content.pageInfo = info
     }
 
 
