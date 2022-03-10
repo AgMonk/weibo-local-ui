@@ -47,6 +47,14 @@
               <el-image :src="pageInfo.backgroundImage" />
             </el-link>
           </div>
+          <div v-if="pageInfo.type==='video'">
+            <div>
+              <el-link :href="pageInfo.urls.h5" target="_blank" type="success">
+                {{ pageInfo.content[0] }}
+              </el-link>
+            </div>
+
+          </div>
 
         </div>
         <!--       图片-->

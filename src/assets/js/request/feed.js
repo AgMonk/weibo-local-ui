@@ -180,7 +180,14 @@ const parse = (item) => {
             content: [content1, content2, content3, content4]
         };
         if (media_info) {
-            info.streamUrl = media_info.stream_url
+            info.urls = {
+                stream: media_info.stream_url,
+                streamHd: media_info.stream_url_hd,
+                mp4Sd: media_info.mp4_sd_url,
+                mp4Hd: media_info.mp4_hd_url,
+                h5: media_info.h5_url,
+                mp4_720p: media_info.mp4_720p_mp4,
+            }
         }
         content.pageInfo = info
     }
