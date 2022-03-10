@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data" style="color:white">
+  <div v-if="data" style="color:white;">
     <el-container direction="horizontal">
       <el-aside v-if="!disableAvatar" width="50px">
         <!--       todo 头像-->
@@ -14,12 +14,16 @@
           <span v-if="data.source"> 来自：{{ data.source }}</span>
         </div>
         <!--       正文-->
-        <div :id="`正文:${data.id}`" style="color:#c5c5c5">
+        <div  style="color:#c5c5c5">
           {{ data.text }}
           <!--          todo 展开请求-->
           <span v-if="data.isLongText" class="clickable" style="color:#a3ffcc">...[展开]</span>
         </div>
         <!--        被转发微博-->
+        <div v-if="data.retweeted">
+          <el-divider content-position="left">转发</el-divider>
+          <wb-status-card :id="data.retweeted" />
+        </div>
         <!--       媒体-->
         <!--       转发、评论、点赞-->
       </el-main>
