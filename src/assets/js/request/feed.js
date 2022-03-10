@@ -1,5 +1,5 @@
 import {wbGetRequest} from "@/assets/js/request/request";
-import {distinctById} from "@/assets/js/utils/ObjUtils";
+import {copyField, distinctById} from "@/assets/js/utils/ObjUtils";
 
 const getTimelinePrefix = (type) => {
     switch (type) {
@@ -115,13 +115,14 @@ const parse = (item) => {
     //todo
     const pictures = !pic_infos ? [] : Object.keys(pic_infos).map(i => pic_infos[i]).map(item => {
         const {thumbnail, bmiddle, large, original, largest, mw2000, focus_point, object_id, pic_id, photo_tag, type, pic_status} = item
+        const urlFields = ['url', 'height', 'width']
         const urls = {
-            thumbnail: thumbnail.url,
-            bmiddle: bmiddle.url,
-            large: large.url,
-            original: original.url,
-            largest: largest.url,
-            mw2000: mw2000.url,
+            thumbnail: copyField(thumbnail, urlFields),
+            bmiddle: copyField(bmiddle, urlFields),
+            large: copyField(large, urlFields),
+            original: copyField(original, urlFields),
+            largest: copyField(largest, urlFields),
+            mw2000: copyField(mw2000, urlFields),
 
         }
         return {

@@ -64,10 +64,10 @@
                 :initial-index="i"
                 :preview-src-list="largest"
                 :src="url"
+                :style="imageStyle"
                 fit="cover"
                 hide-on-click-modal
                 referrer-policy="no-referrer"
-                style="width: 150px; height: 150px;border-radius:15px"
             />
             <br v-if="i%3===2" />
           </span>
@@ -95,6 +95,11 @@ export default {
       thumbnail: [],
       largest: [],
       pageInfo: undefined,
+      imageStyle: {
+        width: "150px",
+        height: "150px",
+        "border-radius": "15px",
+      }
     }
   },
   computed: {},
@@ -107,9 +112,18 @@ export default {
       if (data.id === 4745480598194240) {
         console.log(data.pageInfo)
       }
-
-      this.thumbnail = data.pictures.map(i => replaceImageUrl(i.urls.thumbnail))
-      this.largest = data.pictures.map(i => replaceImageUrl(i.urls.largest))
+      const pics = data.pictures;
+      this.largest = pics.map(i => replaceImageUrl(i.urls.largest.url))
+      if (pics.length !== 1) {
+        this.thumbnail = pics.map(i => replaceImageUrl(i.urls.thumbnail.url))
+        this.imageStyle.width = "150px";
+        this.imageStyle.height = "150px";
+      } else {
+        this.thumbnail = pics.map(i => replaceImageUrl(i.urls.bmiddle.url))
+        const {height, width} = pics[0].urls.bmiddle
+        this.imageStyle.width = `${width}`;
+        this.imageStyle.height = `${height}`;
+      }
     }
   },
   mounted() {

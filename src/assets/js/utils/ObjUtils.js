@@ -12,3 +12,13 @@ export const distinctById = (array) => {
     array.forEach(i => map[i.id] = i)
     return Object.keys(map).map(i => map[i])
 }
+
+export const copyField = (obj, fields) => {
+    const o = {}
+    Object.keys(obj).forEach(key => {
+        if (fields.includes(key)) {
+            o[key] = obj[key]
+        }
+    })
+    return o
+}
