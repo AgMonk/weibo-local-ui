@@ -21,7 +21,9 @@
         </div>
         <!--       正文-->
         <div style="color:#c5c5c5">
-          {{ data.text }}
+          <div v-for="text in  data.text ">
+            {{ text }}
+          </div>
           <!--          todo 解析回复-->
           <!--          <wb-status-content v-if="data.textHtml" :html="data.textHtml" />-->
         </div>

@@ -142,7 +142,7 @@ const parse = (item) => {
         // visible,
 
         isLongText,
-        text: text_raw,
+        text: text_raw.split('\n'),
         textHtml: text,
         length: textLength,
         timestamp,
