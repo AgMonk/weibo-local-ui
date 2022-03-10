@@ -30,9 +30,9 @@
           <el-divider content-position="left">转发</el-divider>
           <wb-status-card :id="data.retweeted" disable-avatar />
         </div>
-        <!--       视频-->
-        <!--       页面链接-->
+        <!--       媒体-->
         <div v-if="pageInfo">
+          <!--          文章-->
           <div v-if="pageInfo.type==='article'">
             <el-link :href="`https://weibo.com/ttarticle/p/show?id=${pageInfo.id}`" target="_blank">
               <div>
@@ -42,16 +42,19 @@
               </div>
             </el-link>
           </div>
+          <!--          直播-->
           <div v-if="pageInfo.type==='live'">
             <el-link :href="`https://weibo.com/l/wblive/p/show/${pageInfo.objectId}`" target="_blank">
               <el-image :src="pageInfo.backgroundImage" />
             </el-link>
           </div>
+          <!--       视频-->
           <div v-if="pageInfo.type==='video'">
             <div>
               <el-link :href="pageInfo.urls.h5" target="_blank" type="success">
                 {{ pageInfo.content[0] }}
               </el-link>
+              <wb-status-video :url="pageInfo.urls.mp4Hd" />
             </div>
 
           </div>
@@ -85,10 +88,11 @@ import WbUserLink from "@/components/weibo/WbUserLink";
 import WbUserAvatar from "@/components/weibo/WbUserAvatar";
 import WbStatusContent from "@/components/weibo/WbStatusContent";
 import {replaceImageUrl} from "@/assets/js/request/feed";
+import WbStatusVideo from "@/components/weibo/WbStatusVideo";
 
 export default {
   name: "WbStatusCard",
-  components: {WbStatusContent, WbUserAvatar, WbUserLink},
+  components: {WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink},
 
   data() {
     return {
