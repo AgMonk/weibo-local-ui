@@ -90,6 +90,7 @@ const parse = (item) => {
         text_raw, text,
         url_struct,
         visible,
+        page_info,
         user,
         retweeted_status,
         reposts_count,
@@ -114,19 +115,18 @@ const parse = (item) => {
     //todo
     const pictures = !pic_infos ? [] : Object.keys(pic_infos).map(i => pic_infos[i]).map(item => {
         const {thumbnail, bmiddle, large, original, largest, mw2000, focus_point, object_id, pic_id, photo_tag, type, pic_status} = item
-        const clean = (url) =>url.replace('https:/','').replace('.sinaimg.cn','');
         const urls = {
-            thumbnail: clean(thumbnail.url),
-            bmiddle: clean(bmiddle.url),
-            large: clean(large.url),
-            original: clean(original.url),
-            largest: clean(largest.url),
-            mw2000: clean(mw2000.url),
+            thumbnail: thumbnail.url,
+            bmiddle: bmiddle.url,
+            large: large.url,
+            original: original.url,
+            largest: largest.url,
+            mw2000: mw2000.url,
 
         }
         return {
-            id:pic_id,
-            type,status:pic_status,
+            id: pic_id,
+            type, status: pic_status,
             urls,
         }
     })
@@ -168,6 +168,17 @@ const parse = (item) => {
         iconList: user.icon_list,
     }
 
+    if (page_info) {
+        const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4} = page_info
+        content.pageInfo = {
+            type: object_type,
+            id: page_id,
+            backgroundImage: replaceImageUrl(page_pic),
+            authorId: author_id,
+            content: [content1, content2, content3, content4]
+        }
+    }
+
 
     const data = {content, author,};
 
@@ -176,3 +187,6 @@ const parse = (item) => {
     }
     return data
 }
+
+
+export const replaceImageUrl = (url) => url.replace('https:/', '').replace('.sinaimg.cn', '');

@@ -27,19 +27,30 @@
           <wb-status-card :id="data.retweeted" disable-avatar />
         </div>
         <!--       视频-->
+        <!--       页面链接-->
+        <div v-if="pageInfo">
+          <div v-if="pageInfo.type==='article'">
+            <el-link :href="`https://weibo.com/ttarticle/p/show?id=${pageInfo.id}`" target="_blank">
+              <div>
+                <el-image :src="pageInfo.backgroundImage" />
+                <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px">{{ pageInfo.content[0] }}</span>
+              </div>
+            </el-link>
+          </div>
+        </div>
         <!--       图片-->
         <div v-if="data.pictures &&  data.pictures.length>0">
           <span v-for="(url,i) in thumbnail">
-              <el-image
-                  :initial-index="i"
-                  :preview-src-list="largest"
-                  :src="url"
-                  fit="cover"
-                  hide-on-click-modal
-                  referrer-policy="no-referrer"
-                  style="width: 150px; height: 150px"
-              />
-            <br v-if="i%3===2"/>
+            <el-image
+                :initial-index="i"
+                :preview-src-list="largest"
+                :src="url"
+                fit="cover"
+                hide-on-click-modal
+                referrer-policy="no-referrer"
+                style="width: 150px; height: 150px;border-radius:15px"
+            />
+            <br v-if="i%3===2" />
           </span>
         </div>
         <!--       转发、评论、点赞-->
@@ -53,6 +64,7 @@ import {mapGetters} from "vuex";
 import WbUserLink from "@/components/weibo/WbUserLink";
 import WbUserAvatar from "@/components/weibo/WbUserAvatar";
 import WbStatusContent from "@/components/weibo/WbStatusContent";
+import {replaceImageUrl} from "@/assets/js/request/feed";
 
 export default {
   name: "WbStatusCard",
@@ -63,6 +75,7 @@ export default {
       data: {},
       thumbnail: [],
       largest: [],
+      pageInfo: undefined,
     }
   },
   computed: {},
@@ -71,8 +84,13 @@ export default {
     load(id) {
       const data = this.getStatusFromCache()(id);
       this.data = data
-      this.thumbnail = data.pictures.map(i => i.urls.thumbnail)
-      this.largest = data.pictures.map(i => i.urls.largest)
+      this.pageInfo = data.pageInfo
+      if (data.id === 4745480598194240) {
+        console.log(data.pageInfo)
+      }
+
+      this.thumbnail = data.pictures.map(i => replaceImageUrl(i.urls.thumbnail))
+      this.largest = data.pictures.map(i => replaceImageUrl(i.urls.largest))
     }
   },
   mounted() {
