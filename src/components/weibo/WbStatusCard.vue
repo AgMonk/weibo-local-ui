@@ -61,6 +61,7 @@
         <div v-if="data.pictures &&  data.pictures.length>0">
           <span v-for="(url,i) in thumbnail">
             <el-image
+                lazy
                 :initial-index="i"
                 :preview-src-list="largest"
                 :src="url"
@@ -69,7 +70,7 @@
                 hide-on-click-modal
                 referrer-policy="no-referrer"
             />
-            <br v-if="i%3===2" />
+            <br v-if="thumbnail.length===9 && i%3===2" />
           </span>
         </div>
         <!--       转发、评论、点赞-->
@@ -114,12 +115,11 @@ export default {
       }
       const pics = data.pictures;
       this.largest = pics.map(i => replaceImageUrl(i.urls.largest.url))
+      this.thumbnail = pics.map(i => replaceImageUrl(i.urls.bmiddle.url))
       if (pics.length !== 1) {
-        this.thumbnail = pics.map(i => replaceImageUrl(i.urls.thumbnail.url))
         this.imageStyle.width = "150px";
         this.imageStyle.height = "150px";
       } else {
-        this.thumbnail = pics.map(i => replaceImageUrl(i.urls.bmiddle.url))
         const {height, width} = pics[0].urls.bmiddle
         this.imageStyle.width = `${width}`;
         this.imageStyle.height = `${height}`;
