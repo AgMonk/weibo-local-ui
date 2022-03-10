@@ -10,7 +10,7 @@
         <div style="border: 3px dashed #ec7878">
 
           <div id="动态">
-            <el-scrollbar height="650px">
+            <el-scrollbar ref="scrollbar" height="650px">
               <div v-infinite-scroll="getMore">
                 <div v-for="id in data" style="border: 1px solid #949494;margin-bottom: 2px">
                   <wb-status-card :id="id" />
@@ -66,6 +66,7 @@ export default {
     load(route) {
       this.loadingMore = true
       this.getFirstTimeline(this.getParams(route)).then(res => {
+        this.$refs['scrollbar'].setScrollTop(0)
         this.data = res;
         this.$nextTick(() => this.loadingMore = false)
       })
