@@ -3,11 +3,11 @@
     <el-container direction="horizontal">
       <el-aside v-if="!disableAvatar" width="50px">
         <!--       todo 头像-->
-        <el-avatar :size="50" />
+        <wb-user-avatar v-if="data.authorId" :id="data.authorId" />
       </el-aside>
       <el-main style="text-align: left">
         <!--      微博名 -->
-        <b>作者：{{ data.authorId }}</b>
+        <b><wb-user-link v-if="data.authorId" :id="data.authorId" /></b>
         <!--      时间 来自 -->
         <div v-if="data.timestamp" class="common-text">
           <span>{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
@@ -22,7 +22,7 @@
         <!--        被转发微博-->
         <div v-if="data.retweeted">
           <el-divider content-position="left">转发</el-divider>
-          <wb-status-card :id="data.retweeted" />
+          <wb-status-card :id="data.retweeted" disable-avatar />
         </div>
         <!--       媒体-->
         <!--       转发、评论、点赞-->
@@ -33,9 +33,13 @@
 
 <script>
 import {mapGetters} from "vuex";
+import WbUserLink from "@/components/weibo/WbUserLink";
+import WbUserAvatar from "@/components/weibo/WbUserAvatar";
 
 export default {
   name: "WbStatusCard",
+  components: {WbUserAvatar, WbUserLink},
+
   data() {
     return {
       data: {},
@@ -46,7 +50,6 @@ export default {
     ...mapGetters('Groups', [`getStatusFromCache`]),
     load(id) {
       this.data = this.getStatusFromCache()(id)
-      console.log(this.data)
     }
   },
   mounted() {

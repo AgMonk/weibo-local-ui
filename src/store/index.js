@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import Loading from "@/store/Loading";
 import Groups from "@/store/Groups";
+import User from "@/store/User";
 
 export default createStore({
   state: {
@@ -10,6 +11,6 @@ export default createStore({
   actions: {
   },
   modules: {
-    Loading,Groups,
+    Loading,Groups,User
   }
 })

@@ -17,7 +17,7 @@ export default {
         method(state, payload) {
 
         },
-        save2Cache(state, content) {
+        saveContent2Cache(state, content) {
             const key = getStatusKey(content.id)
             state.cache[key] = content;
         },
@@ -41,19 +41,20 @@ export default {
         getFriendsTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4}) => {
             const key = getStatusKey(listId)
             return getFriendsTimeline({listId, fid, count, sinceId, maxId, refresh}).then(res => {
-                const {sinceId, maxId, authors, contents,retweeted} = res
+                const {sinceId, maxId, authors, contents, retweeted} = res
                 if (!state.friendsTimeline[key]) {
                     state.friendsTimeline[key] = {data: []}
                 }
                 console.log(contents)
 
                 //todo 保存作者信息
-                console.log(authors)
+                console.log(authors[0])
+                authors.forEach(user => commit('User/saveUser2Cache', user, {root: true}));
 
                 // 保存动态信息
-                contents.forEach(i => commit('save2Cache', i))
-                if (retweeted){
-                    retweeted.forEach(i => commit('save2Cache', i))
+                contents.forEach(i => commit('saveContent2Cache', i))
+                if (retweeted) {
+                    retweeted.forEach(i => commit('saveContent2Cache', i))
                 }
 
                 const timeline = state.friendsTimeline[key]

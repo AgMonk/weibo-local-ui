@@ -5,7 +5,7 @@
     <el-main>
       <div style="margin-left: 5px;">
         <div style="text-align: left">
-          <el-button size="small" type="success" @click="clearTimeline(gid);getFirstTimeline(gid)">刷新</el-button>
+          <el-button size="small" type="success" @click="clearTimeline(gid);load($route)">刷新</el-button>
         </div>
         <div style="border: 3px dashed #ec7878">
 
