@@ -3,7 +3,12 @@
     <!--  <el-container direction="horizontal">-->
     <!--    <el-header></el-header>-->
     <el-main>
-      <div style="margin-left: 5px;">
+      <div v-loading="loadingMore"
+           element-loading-background="rgba(0, 0, 0, 0.8)"
+           element-loading-svg-view-box="-10, -10, 50, 50"
+           element-loading-text="加载中..."
+           style="margin-left: 5px;"
+      >
         <div style="text-align: left">
           <el-button size="small" type="success" @click="clearTimeline(gid);load($route)">刷新</el-button>
         </div>
@@ -45,6 +50,7 @@ export default {
   },
   computed: {
     ...mapState("Groups", [`timeline`]),
+    ...mapState("Loading", [`svg`]),
   },
   methods: {
     ...mapActions("Groups", [`getFirstTimeline`, `getTimeline`, `getMoreTimeline`]),
