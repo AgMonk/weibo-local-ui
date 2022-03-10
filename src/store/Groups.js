@@ -2,7 +2,7 @@
 // noinspection JSUnusedLocalSymbols
 
 import {getCacheByTime} from "@/assets/js/utils/CacheUtils";
-import {getAllGroups, getFriendsTimeline} from "@/assets/js/request/feed";
+import {getAllGroups, getTimeline} from "@/assets/js/request/feed";
 
 const getStatusKey = (gid) => `${gid}`
 
@@ -11,7 +11,7 @@ export default {
     state: {
         cache: {},
         groups: {},
-        friendsTimeline: {},
+        timeline: {},
     },
     mutations: {
         method(state, payload) {
@@ -22,7 +22,7 @@ export default {
             state.cache[key] = content;
         },
         clearTimeline(state, gid) {
-            state.friendsTimeline[`${gid}`] = {data: []}
+            state.timeline[`${gid}`] = {data: []}
         },
     },
     actions: {
@@ -38,12 +38,12 @@ export default {
                 force,
             })
         },
-        getFriendsTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4}) => {
+        getTimeline: ({dispatch, commit, state}, {listId, fid, count = 20, sinceId, maxId, refresh = 4, type}) => {
             const key = getStatusKey(listId)
-            return getFriendsTimeline({listId, fid, count, sinceId, maxId, refresh}).then(res => {
+            return getTimeline({listId, fid, count, sinceId, maxId, refresh, type}).then(res => {
                 const {sinceId, maxId, authors, contents, retweeted} = res
-                if (!state.friendsTimeline[key]) {
-                    state.friendsTimeline[key] = {data: []}
+                if (!state.timeline[key]) {
+                    state.timeline[key] = {data: []}
                 }
                 console.log(contents)
 
@@ -56,19 +56,19 @@ export default {
                     retweeted.forEach(i => commit('saveContent2Cache', i))
                 }
 
-                const timeline = state.friendsTimeline[key]
+                const timeline = state.timeline[key]
                 timeline.sinceId = sinceId
                 timeline.maxId = maxId
                 timeline.data.push(...contents.map(i => i.id))
                 return timeline.data
             })
         },
-        getFirstTimeline: ({dispatch, commit, state}, listId) => {
-            return dispatch('getFriendsTimeline', {listId, count: 20})
+        getFirstTimeline: ({dispatch, commit, state}, {listId, type}) => {
+            return dispatch('getTimeline', {listId, type})
         },
-        getMoreTimeline: ({dispatch, commit, state}, listId) => {
-            const timeline = state.friendsTimeline[`${listId}`]
-            return dispatch('getFriendsTimeline', {maxId: timeline.maxId, listId, count: 20})
+        getMoreTimeline: ({dispatch, commit, state}, {listId, type}) => {
+            const timeline = state.timeline[`${listId}`]
+            return dispatch('getTimeline', {maxId: timeline.maxId, listId, type})
         }
 
     },
@@ -76,6 +76,6 @@ export default {
         getStatusFromCache: (state) => (id) => {
             const key = getStatusKey(id)
             return state.cache[key]
-        }
+        },
     },
 }

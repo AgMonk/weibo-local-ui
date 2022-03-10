@@ -20,7 +20,7 @@
         <span class="group-title">{{ group.title }}</span>
         <!--        todo 隐藏该分组按钮-->
       </template>
-      <el-menu-item v-for="item in group.data" :index="`/my-groups/${item.gid}`" style="min-width:150px">
+      <el-menu-item v-for="item in group.data" :index="`/my-groups/${item.prefix}/${item.gid}`" style="min-width:150px">
         {{ item.title }}
         <!--        todo 隐藏该分组按钮-->
       </el-menu-item>
@@ -56,7 +56,7 @@ export default {
         for (let j = 0; j < data.length; j++) {
           const item = data[j]
           if (item.title===title){
-            return `/my-groups/${item.gid}`
+            return `/my-groups/${item.prefix}/${item.gid}`
           }
         }
       }
@@ -64,6 +64,7 @@ export default {
     loadGroups(force) {
       this.loading = true;
       this.getAllGroups(force).then(res => {
+        console.log(res)
         this.groups = res.filter(res => res.data && res.data.length > 0);
         this.loading = false;
         if (this.$route.name==='我的分组'){

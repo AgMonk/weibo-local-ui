@@ -10,7 +10,7 @@ const routes = [
         name: '我的分组',
         component: () => import('../views/MyGroups'),
         children: [
-            {path: ':gid', name: "分组消息", component: WbGroupMessages}
+            {path: ':type/:gid', name: "分组消息", component: WbGroupMessages}
         ]
     },
     {

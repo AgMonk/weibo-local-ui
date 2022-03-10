@@ -9,7 +9,7 @@
         </div>
         <div style="border: 3px dashed #ec7878">
 
-          <div v-if="friendsTimeline[gid]">
+          <div id="动态">
             <el-scrollbar height="650px">
               <div v-infinite-scroll="getMore">
                 <div v-for="id in data" style="border: 1px solid #949494;margin-bottom: 2px">
@@ -44,24 +44,28 @@ export default {
     }
   },
   computed: {
-    ...mapState("Groups", [`friendsTimeline`]),
+    ...mapState("Groups", [`timeline`]),
   },
   methods: {
-    ...mapActions("Groups", [`getFirstTimeline`, `getFriendsTimeline`, `getMoreTimeline`]),
+    ...mapActions("Groups", [`getFirstTimeline`, `getTimeline`, `getMoreTimeline`]),
     ...mapMutations("Groups", [`clearTimeline`]),
+    getParams(route) {
+      const listId = Number(route.params.gid)
+      const type = route.params.type
+      return {listId, type}
+    },
     getMore() {
       if (!this.loadingMore) {
         this.loadingMore = true
-        this.getMoreTimeline(this.gid).then(res => {
+        this.getMoreTimeline(this.getParams(this.$route)).then(res => {
           this.loadingMore = false
           this.data = res;
         })
       }
     },
     load(route) {
-      this.gid = Number(route.params.gid)
       this.loadingMore = true
-      this.getFirstTimeline(this.gid).then(res => {
+      this.getFirstTimeline(this.getParams(route)).then(res => {
         this.data = res;
         this.$nextTick(() => this.loadingMore = false)
       })

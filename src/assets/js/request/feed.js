@@ -1,6 +1,17 @@
 import {wbGetRequest} from "@/assets/js/request/request";
 import {distinctById} from "@/assets/js/utils/ObjUtils";
 
+const getTimelinePrefix = (type) => {
+    switch (type) {
+        case 20:
+            return 'friends';
+        case 0:
+            return 'groups';
+        case 1:
+            return 'unreadfriends';
+    }
+}
+
 
 export const getAllGroups = () => {
     return wbGetRequest({
@@ -18,6 +29,7 @@ export const getAllGroups = () => {
             gid: Number(item.gid),
             // uid: Number(item.uid),
             type: Number(item.type),
+            prefix: getTimelinePrefix(Number(item.type)),
             sysGroup: Number(item.sysgroup),
             title: item.title,
             isUnread: item.is_unread
@@ -27,14 +39,14 @@ export const getAllGroups = () => {
     }))
 }
 
-export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, refresh = 4}) => {
+export const getTimeline = ({listId, fid, count = 10, sinceId, maxId, refresh = 4, type}) => {
     return wbGetRequest({
-        url: '/feed/friendstimeline',
+        url: `/feed/${type}timeline`,
         params: {
             list_id: listId,
             since_id: sinceId,
             max_id: maxId,
-            fid: fid ? fid : listId,
+            fid: fid,
             count, refresh,
         }
     }).then(res => {
