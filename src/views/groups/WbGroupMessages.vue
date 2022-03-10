@@ -12,7 +12,9 @@
           <div v-if="friendsTimeline[gid]">
             <el-scrollbar height="650px">
               <div v-infinite-scroll="getMore">
-                <wb-status-card v-for="item in friendsTimeline[gid].data" :data="item" />
+                <div v-for="id in data" style="border: 1px solid #949494;margin-bottom: 2px">
+                  <wb-status-card :id="id" />
+                </div>
                 <div class="common-text">
                   <h4>加载中...</h4>
                 </div>
@@ -38,7 +40,7 @@ export default {
     return {
       gid: undefined,
       loadingMore: false,
-      data:[],
+      data: [],
     }
   },
   computed: {
@@ -50,15 +52,18 @@ export default {
     getMore() {
       if (!this.loadingMore) {
         this.loadingMore = true
-        this.getMoreTimeline(this.gid).then(() => {
+        this.getMoreTimeline(this.gid).then(res => {
           this.loadingMore = false
+          this.data = res;
         })
       }
     },
     load(route) {
       this.gid = Number(route.params.gid)
+      this.loadingMore = true
       this.getFirstTimeline(this.gid).then(res => {
-        console.log(res[0])
+        this.data = res;
+        this.$nextTick(() => this.loadingMore = false)
       })
     }
   },

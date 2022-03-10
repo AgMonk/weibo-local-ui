@@ -1,4 +1,5 @@
 import {wbGetRequest} from "@/assets/js/request/request";
+import {distinctById} from "@/assets/js/utils/ObjUtils";
 
 
 export const getAllGroups = () => {
@@ -39,17 +40,28 @@ export const getFriendsTimeline = ({listId, fid, count = 10, sinceId, maxId, ref
     }).then(res => {
         const {max_id, since_id, statuses} = res
         console.log(statuses)
-        const data = statuses.map(item => parseStatues(item))
-
         return {
-            maxId: max_id, sinceId: since_id, data
+            maxId: max_id, sinceId: since_id, ...parseStatues(statuses)
         }
     })
 }
 
+export const parseStatues = (statuses) => {
+    const data = statuses.map(item => parse(item))
+    const contents = data.map(i => i.content)
+    let authors = data.map(i => i.author)
+
+    const retweeted = contents.filter(i => i.retweeted).map(i => i.retweeted)
+    const retweetedAuthors = retweeted.map(i => i.author)
+    const retweetedContents = retweeted.map(i => i.content)
+    authors.push(...retweetedAuthors)
+    authors = distinctById(authors)
+    contents.filter(i => i.retweeted).forEach(item => item.retweeted = item.retweeted.content.id)
+    return {contents, authors, retweeted: retweetedContents};
+}
 
 //解析单条状态数据
-export const parseStatues = (item) => {
+const parse = (item) => {
     //todo 编辑时间
     const {
         created_at,
@@ -99,6 +111,9 @@ export const parseStatues = (item) => {
 
 
     const content = {
+        //todo
+        // visible,
+
         isLongText,
         text: text_raw,
         length: textLength,
@@ -106,7 +121,9 @@ export const parseStatues = (item) => {
         source,
         counts,
         blog,
-        pictures
+        pictures,
+        id,
+        authorId: user.id,
     }
     //作者
     const author = {
@@ -125,17 +142,10 @@ export const parseStatues = (item) => {
     }
 
 
-    const data = {
-        //todo
-        // visible,
-        id,
-        content,
-        author,
-        authorId: author.id
-    };
+    const data = {content, author,};
 
     if (retweeted_status) {
-        data.retweeted = parseStatues(retweeted_status)
+        content.retweeted = parse(retweeted_status)
     }
     return data
 }

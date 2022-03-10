@@ -1,40 +1,61 @@
 <template>
- <div style="color:white" >
-   <el-container direction="horizontal">
-     <el-aside width="50px" v-if="!disableAvatar">
-<!--       todo 头像-->
-       <el-avatar :size="50" />
-     </el-aside>
-     <el-main style="text-align: left">
-<!--      微博名 -->
-         <b>{{data.author.name}}</b>
-<!--      时间 来自 -->
-       <div class="common-text">
-         <span >{{data.content.timestamp.create.before || data.content.timestamp.create.datetime}}</span>
-         <span v-if="data.content.source"> 来自：{{data.content.source}}</span>
-       </div>
-<!--       正文-->
-<!--       媒体-->
-<!--       转发、评论、点赞-->
-     </el-main>
-   </el-container>
- </div>
+  <div v-if="data" style="color:white">
+    <el-container direction="horizontal">
+      <el-aside v-if="!disableAvatar" width="50px">
+        <!--       todo 头像-->
+        <el-avatar :size="50" />
+      </el-aside>
+      <el-main style="text-align: left">
+        <!--      微博名 -->
+        <b>作者：{{ data.authorId }}</b>
+        <!--      时间 来自 -->
+        <div v-if="data.timestamp" class="common-text">
+          <span>{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
+          <span v-if="data.source"> 来自：{{ data.source }}</span>
+        </div>
+        <!--       正文-->
+        <div :id="`正文:${data.id}`" style="color:#c5c5c5">
+          {{ data.text }}
+          <!--          todo 展开请求-->
+          <span v-if="data.isLongText" class="clickable" style="color:#a3ffcc">...[展开]</span>
+        </div>
+        <!--        被转发微博-->
+        <!--       媒体-->
+        <!--       转发、评论、点赞-->
+      </el-main>
+    </el-container>
+  </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "WbStatusCard",
   data() {
-    return {}
+    return {
+      data: {},
+    }
   },
   computed: {},
-  methods: {},
-  mounted() {
+  methods: {
+    ...mapGetters('Groups', [`getStatusFromCache`]),
+    load(id) {
+      this.data = this.getStatusFromCache()(id)
+      console.log(this.data)
+    }
   },
-  watch: {},
+  mounted() {
+    this.load(this.id)
+  },
+  watch: {
+    id(to) {
+      this.load(to)
+    },
+  },
   props: {
-    data:{type:Object,required:true,},
-    disableAvatar:{type:Boolean,default:false},
+    id: {type: Number, required: true,},
+    disableAvatar: {type: Boolean, default: false},
   },
 }
 

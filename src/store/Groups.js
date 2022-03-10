@@ -3,17 +3,23 @@
 
 import {getCacheByTime} from "@/assets/js/utils/CacheUtils";
 import {getAllGroups, getFriendsTimeline} from "@/assets/js/request/feed";
-import {distinctById} from "@/assets/js/utils/ObjUtils";
+
+const getStatusKey = (gid) => `${gid}`
 
 export default {
     namespaced: true,
     state: {
+        cache: {},
         groups: {},
         friendsTimeline: {},
     },
     mutations: {
         method(state, payload) {
 
+        },
+        save2Cache(state, content) {
+            const key = getStatusKey(content.id)
+            state.cache[key] = content;
         },
         clearTimeline(state, gid) {
             state.friendsTimeline[`${gid}`] = {data: []}
@@ -33,29 +39,43 @@ export default {
             })
         },
         getFriendsTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4}) => {
+            const key = getStatusKey(listId)
             return getFriendsTimeline({listId, fid, count, sinceId, maxId, refresh}).then(res => {
-                const {sinceId, maxId, data} = res
-                if (!state.friendsTimeline[`${listId}`]) {
-                    state.friendsTimeline[`${listId}`] = {data: []}
+                const {sinceId, maxId, authors, contents,retweeted} = res
+                if (!state.friendsTimeline[key]) {
+                    state.friendsTimeline[key] = {data: []}
                 }
-                const timeline = state.friendsTimeline[`${listId}`]
+                console.log(contents)
+
+                //todo 保存作者信息
+                console.log(authors)
+
+                // 保存动态信息
+                contents.forEach(i => commit('save2Cache', i))
+                if (retweeted){
+                    retweeted.forEach(i => commit('save2Cache', i))
+                }
+
+                const timeline = state.friendsTimeline[key]
                 timeline.sinceId = sinceId
                 timeline.maxId = maxId
-                timeline.data.push(...data)
-                timeline.data = distinctById(timeline.data)
-                timeline.data.sort((a, b) => b.content.timestamp.create.time - a.content.timestamp.create.time)
-                console.log(data)
-                return data
+                timeline.data.push(...contents.map(i => i.id))
+                return timeline.data
             })
         },
         getFirstTimeline: ({dispatch, commit, state}, listId) => {
-            return dispatch('getFriendsTimeline',{listId,count:20})
+            return dispatch('getFriendsTimeline', {listId, count: 20})
         },
         getMoreTimeline: ({dispatch, commit, state}, listId) => {
             const timeline = state.friendsTimeline[`${listId}`]
-            return dispatch('getFriendsTimeline',{maxId:timeline.maxId,listId,count:20})
+            return dispatch('getFriendsTimeline', {maxId: timeline.maxId, listId, count: 20})
         }
 
     },
-    getters: {},
+    getters: {
+        getStatusFromCache: (state) => (id) => {
+            const key = getStatusKey(id)
+            return state.cache[key]
+        }
+    },
 }
