@@ -1,10 +1,10 @@
 <template>
-  <el-tooltip >
-<!--    <router-link :to>-->
-      <el-link :style="`font-size: ${size}px;`" :type="type" :underline="false">
-        {{ data.name }}
-      </el-link>
-<!--    </router-link>-->
+  <el-tooltip placement="top">
+    <!--    <router-link :to>-->
+    <el-link :style="`font-size: ${size}px;`" :type="type" :underline="false">
+      {{ data.name }}
+    </el-link>
+    <!--    </router-link>-->
 
   </el-tooltip>
 </template>

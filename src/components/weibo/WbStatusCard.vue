@@ -12,7 +12,11 @@
         </b>
         <!--      时间 来自 -->
         <div v-if="data.timestamp" class="common-text">
-          <span>{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
+          <el-tooltip :content="data.timestamp.create.datetime" effect="light">
+            <el-link :href="`https://weibo.com/${data.authorId}/${data.blog.uuid}`" target="_blank">
+              <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
+            </el-link>
+          </el-tooltip>
           <span v-if="data.source"> 来自：{{ data.source }}</span>
         </div>
         <!--       正文-->
@@ -34,6 +38,7 @@
               <div>
                 <el-image :src="pageInfo.backgroundImage" />
                 <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px">{{ pageInfo.content[0] }}</span>
+                <el-image :src="pageInfo.typeIcon" style="position: absolute; top: 20px; right: 20px" />
               </div>
             </el-link>
           </div>
