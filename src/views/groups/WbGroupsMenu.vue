@@ -11,6 +11,7 @@
            element-loading-text="加载中..."
            router
            text-color="#fff"
+           @select="select"
   >
     <el-sub-menu v-for="group in groups" :index="group.title" style="min-width:150px">
       <template #title>
@@ -61,6 +62,22 @@ export default {
           }
         }
       }
+    },
+    findGroupByGid(gid) {
+      for (let i = 0; i < this.groups.length; i++) {
+        const data = this.groups[i].data
+        for (let j = 0; j < data.length; j++) {
+          const item = data[j]
+          if (item.gid === gid) {
+            return item
+          }
+        }
+      }
+    },
+    select(index, indexPath, item, routeResult) {
+      const gid = Number(index.substring(index.lastIndexOf('/') + 1))
+      const group = this.findGroupByGid(gid)
+      delete group.unread
     },
     loadGroups(force) {
       this.loading = true;
