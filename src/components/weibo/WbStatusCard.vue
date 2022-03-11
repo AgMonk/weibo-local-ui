@@ -63,6 +63,11 @@
 
           </div>
 
+          <!--          todo 互动投票-->
+          <div>
+
+          </div>
+
         </div>
         <!--       图片-->
         <div v-if="data.pictures &&  data.pictures.length>0">
@@ -81,6 +86,14 @@
           </span>
         </div>
         <!--       转发、评论、点赞-->
+        <div>
+          <el-row>
+            <el-col :span="6 "><!--todo 快转--></el-col>
+            <el-col :span="6 "><!--todo 转发--></el-col>
+            <el-col :span="6 "><!--todo 评论--></el-col>
+            <el-col :span="6 "><!--todo 点赞--></el-col>
+          </el-row>
+        </div>
       </el-main>
     </el-container>
   </div>
