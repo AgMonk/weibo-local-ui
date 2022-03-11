@@ -19,11 +19,6 @@ export default {
     HelloWorld
   },
   methods: {
-    setCookie() {
-      ElMessageBox.prompt("请输入cookie").then(res=>{
-        setCookies(res.value,30,'/wb-api')
-      })
-    },
   },
   mounted() {
   }

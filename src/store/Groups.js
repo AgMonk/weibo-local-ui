@@ -38,7 +38,7 @@ export default {
                 force,
             })
         },
-        getTimeline: ({dispatch, commit, state}, {listId, fid, count = 20, sinceId, maxId, refresh = 4, type}) => {
+        getTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4, type}) => {
             const key = getStatusKey(listId)
             return getTimeline({listId, fid, count, sinceId, maxId, refresh, type}).then(res => {
                 const {sinceId, maxId, authors, contents, retweeted} = res
