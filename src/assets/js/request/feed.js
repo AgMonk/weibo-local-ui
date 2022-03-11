@@ -153,12 +153,12 @@ const parse = (item) => {
         blog,
         pictures,
         id,
-        authorId: user.id,
+        authorId: user ? user.id : 0,
     }
     //作者
-    const author = {
-        id: user.id,
-        name: user.screen_name,
+    const author = user ? {
+        id: user ? user.id : 0,
+        name: user ? user.screen_name : '',
         avatars: {
             small: user.profile_image_url,
             large: user.avatar_large,
@@ -169,7 +169,7 @@ const parse = (item) => {
         rank: user.mbrank,
         type: user.mbtype,
         iconList: user.icon_list,
-    }
+    } : {}
 
     if (retweeted_status) {
         content.retweeted = parse(retweeted_status)
