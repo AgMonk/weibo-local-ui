@@ -16,7 +16,7 @@
         <div style="border: 3px dashed #ec7878">
 
           <div id="动态">
-            <el-scrollbar ref="scrollbar" height="650px">
+            <el-scrollbar ref="scrollbar" :height="`${height}px`">
               <div v-infinite-scroll="getMore">
                 <div v-for="id in data" style="border: 1px solid #949494;margin-bottom: 2px">
                   <wb-status-card :id="id" />
@@ -38,6 +38,7 @@
 <script>
 import {mapActions, mapMutations, mapState} from "vuex";
 import WbStatusCard from "@/components/weibo/WbStatusCard";
+import {getScreenInfo} from "@/assets/js/utils/ScreenUtils";
 
 export default {
   name: "WbGroupMessages",
@@ -47,6 +48,8 @@ export default {
       gid: undefined,
       loadingMore: false,
       data: [],
+      height: 650,
+      interval: undefined,
     }
   },
   computed: {
@@ -81,6 +84,12 @@ export default {
   },
   mounted() {
     this.load(this.$route)
+    this.interval = setInterval(() => {
+      this.height = getScreenInfo().clientInfo.clientHeight - 150
+    }, 1000)
+  },
+  unmounted() {
+    clearInterval(this.interval)
   },
   watch: {
     $route(to) {

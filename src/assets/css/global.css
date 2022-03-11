@@ -64,3 +64,7 @@ a {
 .des-label {
     min-width: 80px
 }
+
+html, body {
+    height: 100%;
+}
