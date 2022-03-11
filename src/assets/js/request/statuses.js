@@ -2,6 +2,7 @@
 
 
 import {wbGetRequest, weiboPostRequest} from "@/assets/js/request/request";
+import {getCache} from "@/assets/js/utils/StorageUtils";
 
 
 //https://weibo.com/ajax/statuses/longtext?id=LiWb10Peh
@@ -41,13 +42,21 @@ export const getConfig = () => {
 export const setLike = (id) => {
     return weiboPostRequest({
         url: '/statuses/setLike',
-        data: {id},
+        data: {id: id + ''},
+        headers: {
+            'x-xsrf-token': getCache('token'),
+        }
+    }).then(res => {
+        return res.status.attitudes_count
     })
 }
 
 export const cancelLike = (id) => {
     return weiboPostRequest({
         url: '/statuses/cancelLike',
-        data: {id},
+        data: {id: id + ''},
+        headers: {
+            'x-xsrf-token': getCache('token')
+        }
     })
 }

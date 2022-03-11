@@ -71,7 +71,10 @@ export default {
       if (this.liked) {
         cancelLike(this.id).then(() => this.liked = !this.liked)
       } else {
-        setLike(this.id).then(() => this.liked = !this.liked)
+        setLike(this.id).then(res => {
+          this.liked = !this.liked
+          this.counts.attitudes = res
+        })
       }
     }
   },

@@ -20,7 +20,8 @@
 import {setTitle} from "@/assets/js/request/request";
 import WbGroupsMenu from "@/views/groups/WbGroupsMenu";
 import {ElMessageBox} from "element-plus";
-import {setCookies} from "@/assets/js/utils/CookieUtils";
+import {getCookieMap, setCookies} from "@/assets/js/utils/CookieUtils";
+import {putCache} from "@/assets/js/utils/StorageUtils";
 
 export default {
   name: "MyGroups",
@@ -31,8 +32,10 @@ export default {
   computed: {},
   methods: {
     setCookie() {
-      ElMessageBox.prompt("请输入cookie").then(res=>{
-        setCookies(res.value,30,'/wb-api')
+      ElMessageBox.prompt("请输入cookie").then(res=> {
+        const cookieMap = getCookieMap(res.value);
+        putCache("token", cookieMap['XSRF-TOKEN'])
+        setCookies(res.value, 30, '/wb-api')
       })
     },
   },
