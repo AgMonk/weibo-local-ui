@@ -1,7 +1,7 @@
 <template>
   <el-menu v-loading="loading"
            :default-active="$route.path"
-           :default-openeds="['默认分组']"
+           :default-openeds="['默认分组','我的分组']"
            :element-loading-spinner="svg"
            active-text-color="#ffd04b"
            background-color="#545c64"
@@ -11,7 +11,6 @@
            element-loading-text="加载中..."
            router
            text-color="#fff"
-           unique-opened
   >
     <el-sub-menu v-for="group in groups" :index="group.title" style="min-width:150px">
       <template #title>
@@ -66,6 +65,8 @@ export default {
     loadGroups(force) {
       this.loading = true;
       this.getAllGroups(force).then(res => {
+        //移除多余分组
+        res[0].data.splice(3, res[0].data.length - 3)
         console.log(res)
         this.groups = res.filter(res => res.data && res.data.length > 0);
         this.loading = false;
