@@ -74,7 +74,7 @@ export default {
         }
       }
     },
-    select(index, indexPath, item, routeResult) {
+    select(index) {
       const gid = Number(index.substring(index.lastIndexOf('/') + 1))
       const group = this.findGroupByGid(gid)
       delete group.unread
@@ -103,7 +103,6 @@ export default {
             const group = this.groups[i].data[j]
             if (map.hasOwnProperty(group.gid)) {
               group.unread = map[group.gid];
-              console.log(`${group.gid} : ${group.unread}`)
             }
           }
         }
@@ -116,7 +115,6 @@ export default {
     this.interval = setInterval(() => {
       this.getUnreadHint()
     }, 60000)
-    // setTimeout(()=>this.getUnreadHint(),3000)
   },
   unmounted() {
     clearInterval(this.interval)
