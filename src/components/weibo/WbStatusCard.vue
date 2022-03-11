@@ -12,7 +12,11 @@
         </b>
         <!--      时间 来自 -->
         <div v-if="data.timestamp" class="common-text">
-          <el-tooltip :content="data.timestamp.create.datetime" effect="light">
+          <el-tooltip effect="light">
+            <template #content>
+              <div>{{ data.timestamp.create.datetime }}</div>
+              <my-copy-button :text="`https://weibo.com/${data.authorId}/${data.blog.uuid}`">复制来源网址</my-copy-button>
+            </template>
             <el-link :href="`https://weibo.com/${data.authorId}/${data.blog.uuid}`" target="_blank">
               <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
             </el-link>
@@ -102,10 +106,11 @@ import WbStatusContent from "@/components/weibo/WbStatusContent";
 import {replaceImageUrl} from "@/assets/js/request/feed";
 import WbStatusVideo from "@/components/weibo/WbStatusVideo";
 import WbStatusOperationButtons from "@/components/weibo/WbStatusOperationButtons";
+import MyCopyButton from "@/components/common/my-copy-button";
 
 export default {
   name: "WbStatusCard",
-  components: {WbStatusOperationButtons, WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink,},
+  components: {MyCopyButton, WbStatusOperationButtons, WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink,},
 
   data() {
     return {
