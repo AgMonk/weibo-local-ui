@@ -40,6 +40,7 @@ export default {
         },
         getTimeline: ({dispatch, commit, state}, {listId, fid, count = 10, sinceId, maxId, refresh = 4, type}) => {
             const key = getStatusKey(listId)
+            const reqMaxId = maxId;
             return getTimeline({listId, fid, count, sinceId, maxId, refresh, type}).then(res => {
                 const {sinceId, maxId, authors, contents, retweeted} = res
                 if (!state.timeline[key]) {
@@ -59,7 +60,12 @@ export default {
                 const timeline = state.timeline[key]
                 timeline.sinceId = sinceId
                 timeline.maxId = maxId
-                timeline.data.push(...contents.map(i => i.id))
+                const contentsId = contents.map(i => i.id);
+                if (reqMaxId) {
+                    timeline.data.push(...contentsId)
+                } else {
+                    timeline.data = [...contentsId, ...timeline.data]
+                }
                 return timeline.data
             })
         },
