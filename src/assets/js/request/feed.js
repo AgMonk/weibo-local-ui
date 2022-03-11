@@ -171,6 +171,10 @@ const parse = (item) => {
         iconList: user.icon_list,
     }
 
+    if (retweeted_status) {
+        content.retweeted = parse(retweeted_status)
+    }
+
     if (page_info) {
         const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4, type_icon, object_id, media_info} = page_info
         const info = {
@@ -192,16 +196,14 @@ const parse = (item) => {
                 mp4_720p: media_info.mp4_720p_mp4,
             }
         }
-        content.pageInfo = info
+        if (content.retweeted) {
+            content.retweeted.content.pageInfo = info
+        } else {
+            content.pageInfo = info
+        }
     }
 
-
-    const data = {content, author,};
-
-    if (retweeted_status) {
-        content.retweeted = parse(retweeted_status)
-    }
-    return data
+    return {content, author,}
 }
 
 
