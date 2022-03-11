@@ -38,15 +38,21 @@
 </style>
 <script>
 import MyNavigation from "@/components/common/my-navigation";
+import {mapActions} from "vuex";
+
 export default {
   components: {MyNavigation},
   methods: {
+    ...mapActions("Emotions", [`getConfig`]),
     back() {
       history.back();
     },
     forward() {
       history.forward()
     },
-  }
+  },
+  mounted() {
+    this.getConfig()
+  },
 }
 </script>

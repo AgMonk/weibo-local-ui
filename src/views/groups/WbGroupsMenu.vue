@@ -75,6 +75,7 @@ export default {
   },
   mounted() {
     this.loadGroups()
+
   },
   watch: {},
   props: {},
