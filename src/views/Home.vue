@@ -9,9 +9,6 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import {getAllGroups} from "@/assets/js/request/feed";
-import {ElMessageBox} from "element-plus";
-import {setCookies} from "@/assets/js/utils/CookieUtils";
 
 export default {
   name: 'Home',

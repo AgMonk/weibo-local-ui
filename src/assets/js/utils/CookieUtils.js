@@ -1,5 +1,4 @@
-export const getCookieMap = () => {
-    let cookieString = document.cookie;
+export const getCookieMap = (cookieString = document.cookie) => {
     let map = {};
     cookieString.split("; ").forEach(line => {
         let s = line.split("=");
