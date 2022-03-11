@@ -17,7 +17,7 @@
         <comment />
       </el-icon>
       <span v-if="counts"> ({{ counts.comments }})</span></span>
-    <span class="operation-button">
+    <span :class="`operation-button ${liked?'liked':''}`" @click="switchLike">
       <el-icon>
         <circle-check />
       </el-icon>
@@ -44,7 +44,7 @@
                                                 评论
       <span v-if="counts"> ({{ counts.comments }})</span>
     </el-col>
-    <el-col :span="6 " class="operation-button"><!--todo 点赞-->
+    <el-col :class="`operation-button ${liked?'liked':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
       <el-icon>
         <circle-check />
       </el-icon>
@@ -55,21 +55,38 @@
 </template>
 <script>
 import {CircleCheck, Comment, Share} from "@element-plus/icons-vue";
+import {cancelLike, setLike} from "@/assets/js/request/statuses";
 
 export default {
   name: "WbStatusOperationButtons",
   components: {Share, Comment, CircleCheck},
   data() {
-    return {}
+    return {
+      liked: false,
+    }
   },
   computed: {},
-  methods: {},
-  mounted() {
+  methods: {
+    switchLike() {
+      if (this.liked) {
+        cancelLike(this.id).then(() => this.liked = !this.liked)
+      } else {
+        setLike(this.id).then(() => this.liked = !this.liked)
+      }
+    }
   },
-  watch: {},
+  mounted() {
+    this.liked = !!this.counts.attitudesStatus
+  },
+  watch: {
+    counts(to) {
+      this.liked = to.attitudesStatus
+    }
+  },
   props: {
     isRetweeted: {type: Boolean, default: false},
     counts: {type: Object},
+    id: {type: Number, required: true,},
   },
 }
 
@@ -82,6 +99,11 @@ export default {
   border-style: dashed;
   border-color: white;
   cursor: pointer;
+}
+
+.liked {
+  border-color: #f59315;
+  color: #f59315;
 }
 
 .operation-button:hover {

@@ -1,7 +1,7 @@
 //https://weibo.com/ajax/statuses/longtext?id=LiWb10Peh
 
 
-import {wbGetRequest} from "@/assets/js/request/request";
+import {wbGetRequest, weiboPostRequest} from "@/assets/js/request/request";
 
 
 //https://weibo.com/ajax/statuses/longtext?id=LiWb10Peh
@@ -38,3 +38,16 @@ export const getConfig = () => {
     })
 }
 
+export const setLike = (id) => {
+    return weiboPostRequest({
+        url: '/statuses/setLike',
+        data: {id},
+    })
+}
+
+export const cancelLike = (id) => {
+    return weiboPostRequest({
+        url: '/statuses/cancelLike',
+        data: {id},
+    })
+}

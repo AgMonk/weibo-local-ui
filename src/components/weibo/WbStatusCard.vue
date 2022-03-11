@@ -86,8 +86,8 @@
           </span>
         </div>
         <!--       转发、评论、点赞-->
-        <div>
-          <wb-status-operation-buttons :counts="data.counts" :is-retweeted="isRetweeted" />
+        <div v-if="data">
+          <wb-status-operation-buttons v-if="data.counts" :id="data.id" :counts="data.counts" :is-retweeted="isRetweeted" />
         </div>
       </el-main>
     </el-container>

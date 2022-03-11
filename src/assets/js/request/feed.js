@@ -96,6 +96,7 @@ const parse = (item) => {
         reposts_count,
         attitudes_count,
         comments_count,
+        attitudes_status,
     } = item
 
     //数量
@@ -103,6 +104,7 @@ const parse = (item) => {
         reposts: reposts_count,
         attitudes: attitudes_count,
         comments: comments_count,
+        attitudesStatus: attitudes_status,
     }
 
     //todo 意义未明
