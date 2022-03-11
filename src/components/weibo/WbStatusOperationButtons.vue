@@ -56,6 +56,7 @@
 <script>
 import {CircleCheck, Comment, Share} from "@element-plus/icons-vue";
 import {cancelLike, setLike} from "@/assets/js/request/statuses";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "WbStatusOperationButtons",
@@ -69,11 +70,15 @@ export default {
   methods: {
     switchLike() {
       if (this.liked) {
-        cancelLike(this.id).then(() => this.liked = !this.liked)
+        cancelLike(this.id).then(() => {
+          ElMessage.success("取消成功")
+          return this.liked = !this.liked;
+        })
       } else {
         setLike(this.id).then(res => {
           this.liked = !this.liked
           this.counts.attitudes = res
+          ElMessage.success("点赞成功")
         })
       }
     }
