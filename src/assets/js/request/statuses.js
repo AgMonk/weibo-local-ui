@@ -78,3 +78,16 @@ export const normalRepost = ({id, comment, isRepost = false, isComment = false,}
         }
     })
 }
+
+export const getComments = ({id, flow = 1, maxId, count = 10, uid}) => {
+    return wbGetRequest({
+        url: '/statuses/buildComments',
+        params: {
+            flow, id, count
+            , is_reload: 1
+            , is_show_bulletin: 2
+            , is_mix: 0
+            , max_id: maxId
+        },
+    })
+}
