@@ -60,3 +60,21 @@ export const cancelLike = (id) => {
         }
     })
 }
+
+export const normalRepost = ({id, comment, isRepost = false, isComment = false,}) => {
+    return weiboPostRequest({
+        url: '/statuses/normal_repost',
+        data: {
+            id, comment,
+            pic_id: "",
+            is_repost: 0,
+            comment_ori: 0,
+            is_comment: isComment ? 1 : 0,
+            visible: 0,
+            share_id: "",
+        },
+        headers: {
+            'x-xsrf-token': getCache('token')
+        }
+    })
+}
