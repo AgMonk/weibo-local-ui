@@ -30,7 +30,7 @@ function onFulfilled(res) {
     const {message} = data;
     const {url} = config
     if (status >= 500) {
-        throw {message:'网络错误', status, url, data: config.data}
+        throw {message: '网络错误', status, url, data: config.data}
     }
     if (status >= 400) {
         throw {message, status, url, data: config.data}

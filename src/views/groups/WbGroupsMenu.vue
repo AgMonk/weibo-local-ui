@@ -1,5 +1,6 @@
 <template>
-  <el-menu v-loading="loading" :element-loading-spinner="svg"
+  <el-menu v-loading="loading"
+           :element-loading-spinner="svg"
            active-text-color="#ffd04b"
            background-color="#545c64"
            direction="vertical"
