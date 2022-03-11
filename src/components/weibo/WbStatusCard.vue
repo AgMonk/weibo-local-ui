@@ -30,7 +30,7 @@
         <!--        被转发微博-->
         <div v-if="data.retweeted">
           <el-divider content-position="left">转发</el-divider>
-          <wb-status-card :id="data.retweeted" disable-avatar />
+          <wb-status-card :id="data.retweeted" disable-avatar is-retweeted />
         </div>
         <!--       媒体-->
         <div v-if="pageInfo">
@@ -73,13 +73,13 @@
         <div v-if="data.pictures &&  data.pictures.length>0">
           <span v-for="(url,i) in thumbnail">
             <el-image
-                lazy
                 :initial-index="i"
                 :preview-src-list="largest"
                 :src="url"
                 :style="imageStyle"
                 fit="cover"
                 hide-on-click-modal
+                lazy
                 referrer-policy="no-referrer"
             />
             <br v-if="thumbnail.length===9 && i%3===2" />
@@ -87,12 +87,7 @@
         </div>
         <!--       转发、评论、点赞-->
         <div>
-          <el-row>
-            <el-col :span="6 "><!--todo 快转--></el-col>
-            <el-col :span="6 "><!--todo 转发--></el-col>
-            <el-col :span="6 "><!--todo 评论--></el-col>
-            <el-col :span="6 "><!--todo 点赞--></el-col>
-          </el-row>
+          <wb-status-operation-buttons :counts="data.counts" :is-retweeted="isRetweeted" />
         </div>
       </el-main>
     </el-container>
@@ -106,10 +101,11 @@ import WbUserAvatar from "@/components/weibo/WbUserAvatar";
 import WbStatusContent from "@/components/weibo/WbStatusContent";
 import {replaceImageUrl} from "@/assets/js/request/feed";
 import WbStatusVideo from "@/components/weibo/WbStatusVideo";
+import WbStatusOperationButtons from "@/components/weibo/WbStatusOperationButtons";
 
 export default {
   name: "WbStatusCard",
-  components: {WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink},
+  components: {WbStatusOperationButtons, WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink,},
 
   data() {
     return {
@@ -158,11 +154,13 @@ export default {
   props: {
     id: {type: Number, required: true,},
     disableAvatar: {type: Boolean, default: false},
+    isRetweeted: {type: Boolean, default: false},
   },
 }
 
 </script>
 
 <style scoped>
+
 
 </style>
