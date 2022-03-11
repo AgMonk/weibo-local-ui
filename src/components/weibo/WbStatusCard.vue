@@ -37,7 +37,7 @@
           <!--          文章-->
           <div v-if="pageInfo.type==='article'">
             <el-link :href="`https://weibo.com/ttarticle/p/show?id=${pageInfo.id}`" target="_blank">
-              <div>
+              <div style="max-width: 50%">
                 <el-image :src="pageInfo.backgroundImage" />
                 <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px">{{ pageInfo.content[0] }}</span>
                 <el-image :src="pageInfo.typeIcon" style="position: absolute; top: 20px; right: 20px" />
@@ -47,7 +47,9 @@
           <!--          直播-->
           <div v-if="pageInfo.type==='live'">
             <el-link :href="`https://weibo.com/l/wblive/p/show/${pageInfo.objectId}`" target="_blank">
-              <el-image :src="pageInfo.backgroundImage" />
+              <div style="max-width: 50%">
+                <el-image :src="pageInfo.backgroundImage" />
+              </div>
             </el-link>
           </div>
           <!--       视频-->
