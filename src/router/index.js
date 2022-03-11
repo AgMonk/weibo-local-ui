@@ -8,15 +8,15 @@ const routes = [
     {
         path: '/my-groups',
         name: '我的分组',
-        component: () => import('../views/MyGroups'),
+        component: () => import('../views/groups/MyGroups'),
         children: [
             {path: ':type/:gid', name: "分组消息", component: WbGroupMessages}
         ]
     },
     {
-        path: '/about',
-        name: 'About',
-        component: () => import( '../views/About.vue')
+        path: '/config',
+        name: '配置',
+        component: () => import( '../views/Config.vue')
     }
 ]
 

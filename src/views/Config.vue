@@ -1,38 +1,30 @@
 <template>
   <el-container direction="vertical">
+    <!--  <el-container direction="horizontal">-->
+    <el-header></el-header>
     <el-main>
-      <el-container direction="horizontal">
-        <el-aside width="150px">
-          <el-button @click="setCookie">cookie</el-button>
+      <el-button @click="setCookie">cookie</el-button>
 
-          <wb-groups-menu />
-        </el-aside>
-      <el-main>
-        <router-view />
-      </el-main>
-      </el-container>
     </el-main>
+    <el-footer></el-footer>
   </el-container>
 
 </template>
 
 <script>
-import {setTitle} from "@/assets/js/request/request";
-import WbGroupsMenu from "@/views/groups/WbGroupsMenu";
 import {ElMessageBox} from "element-plus";
 import {getCookieMap, setCookies} from "@/assets/js/utils/CookieUtils";
 import {putCache} from "@/assets/js/utils/StorageUtils";
 
 export default {
-  name: "MyGroups",
-  components: {WbGroupsMenu},
+  name: "Config",
   data() {
     return {}
   },
   computed: {},
   methods: {
     setCookie() {
-      ElMessageBox.prompt("请输入cookie").then(res=> {
+      ElMessageBox.prompt("请输入cookie").then(res => {
         const cookieMap = getCookieMap(res.value);
         putCache("token", cookieMap['XSRF-TOKEN'])
         setCookies(res.value, 30, '/wb-api')
@@ -40,7 +32,6 @@ export default {
     },
   },
   mounted() {
-    setTitle('首页')
   },
   watch: {},
   props: {},
