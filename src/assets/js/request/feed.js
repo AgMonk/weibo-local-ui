@@ -207,4 +207,4 @@ const parse = (item) => {
 }
 
 
-export const replaceImageUrl = (url) => url.replace('https:/', '').replace('.sinaimg.cn', '');
+export const replaceImageUrl = (url) => url.replace('https:/', '').replace('http:/', '').replace('.sinaimg.cn', '');
