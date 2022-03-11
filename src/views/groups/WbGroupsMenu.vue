@@ -10,7 +10,7 @@
            text-color="#fff"
            :default-openeds="['默认分组']"
            unique-opened
-           :default-active="findIndexByTitle(defaultTitle)"
+           :default-active="$route.path"
   >
     <el-sub-menu v-for="group in groups" :index="group.title" style="min-width:150px">
       <template #title>
