@@ -174,7 +174,7 @@ const parse = (item) => {
         const info = {
             type: object_type,
             id: page_id,
-            backgroundImage: replaceImageUrl(page_pic),
+            backgroundImage: page_pic ? replaceImageUrl(page_pic) : undefined,
             typeIcon: type_icon,
             authorId: author_id,
             objectId: object_id,

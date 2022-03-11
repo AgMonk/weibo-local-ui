@@ -4,6 +4,7 @@
     <!--    <el-header></el-header>-->
     <el-main>
       <div v-loading="loadingMore"
+           :element-loading-spinner="svg"
            element-loading-background="rgba(0, 0, 0, 0.8)"
            element-loading-svg-view-box="-10, -10, 50, 50"
            element-loading-text="加载中..."

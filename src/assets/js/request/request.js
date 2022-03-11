@@ -35,6 +35,9 @@ function onFulfilled(res) {
     if (status >= 400) {
         throw {message, status, url, data: config.data}
     }
+    if (data.ok !== 1) {
+        throw {url, message: 'cookie疑似失效'}
+    }
     return data;
 }
 
