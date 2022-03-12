@@ -22,6 +22,7 @@ export default {
             return getConfig().then(res => {
                 state.map = res.map;
                 state.emoGroups = res.groups
+                console.log(res.map)
             })
         },
     },

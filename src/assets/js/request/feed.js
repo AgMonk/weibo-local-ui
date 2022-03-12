@@ -1,5 +1,6 @@
 import {wbGetRequest} from "@/assets/js/request/request";
 import {copyField, distinctById} from "@/assets/js/utils/ObjUtils";
+import * as url from "url";
 
 const getTimelinePrefix = (type) => {
     switch (type) {
@@ -156,6 +157,26 @@ const parse = (item) => {
         id,
         authorId: user ? user.id : 0,
     }
+    if (url_struct) {
+        content.urlStruct = url_struct.map(item => {
+            const {long_url, short_url, url_title, pic_infos, pic_ids} = item
+            if (url_title === '查看图片') {
+                return {
+                    shortUrl: short_url,
+                    text: '查看图片',
+                    url: replaceImageUrl(pic_infos[pic_ids[0]].large.url)
+                }
+            } else if (url_title.endsWith('视频')) {
+                return {
+                    color: 'green',
+                    shortUrl: short_url,
+                    text: url_title,
+                    url: long_url
+                }
+            }
+        }).filter(i => i)
+
+    }
     //作者
     const author = user ? {
         id: user ? user.id : 0,
@@ -210,6 +231,7 @@ const parse = (item) => {
         }
         if (content.retweeted) {
             content.retweeted.content.pageInfo = info
+            content.retweeted.content.urlStruct = content.urlStruct
         } else {
             content.pageInfo = info
         }
@@ -229,27 +251,31 @@ export const parseText = (text) => {
         const m = res[0]
         const text = res[1]
         if (text.includes('[超话]')) {
-            t = t.replace(m, `<a href="https://huati.weibo.com/k/${text.replace('[超话]', '')}" target="_blank" style="color:orange">${text}</a>`)
+            t = t.replace(m, getUrlHtml(`https://huati.weibo.com/k/${text.replace('[超话]', '')}`, text))
         } else {
-            t = t.replace(m, `<a href="https://s.weibo.com/weibo?q=%23${text}%23" target="_blank" style="color:orange">${m}</a>`)
+            t = t.replace(m, getUrlHtml(`https://s.weibo.com/weibo?q=%23${text}%23`, m))
         }
     }
 
     const atPattern = /@(.+?)[:,\s]/g
     while (res = atPattern.exec(text)) {
         const m = res[1]
-        t = t.replace(`@${m}`, `<a href="https://weibo.com/n/${m}" target="_blank" style="color:orange">@${m}</a>`)
+        t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
     }
     const atPattern2 = /@([^>]+?)$/g
     while (res = atPattern2.exec(t)) {
         const m = res[1]
-        t = t.replace(`@${m}`, `<a href="https://weibo.com/n/${m}" target="_blank" style="color:orange">@${m}</a>`)
+        t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
     }
 
     const twiName = /twi[:,：](.+)\s/g
     while (res = twiName.exec(t)) {
-        const m = res[1]
-        t = t.replace(res[0], `<a href="https://twitter.com/${m}" target="_blank" style="color:orange">推特：${m}</a>`)
+        const m = res[1].trim()
+        t = t.replace(res[0], getUrlHtml(`https://twitter.com/${m}`, '推特：' + m))
     }
     return t
+}
+
+export const getUrlHtml = (url, text, color = 'orange') => {
+    return `<a href="${url}" target="_blank" style="color:${color}">${text}</a>`
 }

@@ -14,6 +14,8 @@
 
 <script>
 import {getLongText} from "@/assets/js/request/statuses";
+import {mapGetters} from "vuex";
+import {getUrlHtml} from "@/assets/js/request/feed";
 
 export default {
   name: "WbStatusContent",
@@ -26,19 +28,45 @@ export default {
   },
   computed: {},
   methods: {
+    ...mapGetters("Emotions", [`getEmotionFromMap`]),
     parse(data) {
       this.text = data.text
-      //todo 替换表情icon
       this.textHtml = data.textHtml
+          .map(i => this.replaceEmotions(i))
+          .map(i => this.replaceUrl(i))
       this.isLongText = data.isLongText
     },
     getLongText() {
       getLongText(this.data.blog.uuid).then(res => {
         this.data.textHtml = res
-        //todo 替换表情icon
         this.textHtml = res
+            .map(i => this.replaceEmotions(i))
+            .map(i => this.replaceUrl(i))
         this.isLongText = false;
       })
+    },
+    replaceUrl(t) {
+      if (!this.data.urlStruct) {
+        return t
+      }
+      this.data.urlStruct.forEach(item => {
+        const {shortUrl, text, url, color} = item
+        t = t.replace(shortUrl, getUrlHtml(url, text, color));
+      })
+      return t;
+    },
+    replaceEmotions(text) {
+      let t = text;
+      const pattern = /\[.+?]/g
+      let res;
+      while (res = pattern.exec(text)) {
+        const m = res[0]
+        const e = this.getEmotionFromMap()(m);
+        if (e) {
+          t = t.replace(m, `<img alt="" src="${e.url}"/>`)
+        }
+      }
+      return t;
     }
   },
   mounted() {

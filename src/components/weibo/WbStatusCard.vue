@@ -56,9 +56,9 @@
           <!--       视频-->
           <div v-if="pageInfo.type==='video'">
             <div>
-              <el-link :href="pageInfo.urls.h5" target="_blank" type="success">
-                {{ pageInfo.content[0] }}
-              </el-link>
+              <!--              <el-link :href="pageInfo.urls.h5" target="_blank" type="success">-->
+              <!--                {{ pageInfo.content[0] }}-->
+              <!--              </el-link>-->
               <wb-status-video :url="pageInfo.urls.mp4Hd" />
             </div>
 
@@ -119,7 +119,7 @@ export default {
 
   data() {
     return {
-      data: {},
+      data: undefined,
       thumbnail: [],
       largest: [],
       pageInfo: undefined,
