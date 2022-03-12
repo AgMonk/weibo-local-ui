@@ -1,10 +1,13 @@
+<!--解析回复正文 需要处理的内容： 话题 、@ -->
+
 <template>
   <div>
-    <!--          todo 解析回复-->
-
-    <span v-html="data"></span>
-    <!--          todo 展开请求-->
-    <span v-if="html&&html.endsWith('...展开')" class="clickable" style="color:#a3ffcc">...[展开]</span>
+    <div v-for="(line,i) in text">
+      <!--          todo 解析回复-->
+      {{ line }}
+      <!--          todo 展开请求-->
+      <span v-if="isLongText && i===text.length-1" class="clickable" style="color:#a3ffcc">...[展开]</span>
+    </div>
   </div>
 </template>
 
@@ -13,32 +16,35 @@ export default {
   name: "WbStatusContent",
   data() {
     return {
-      data: "",
+      text: [],
+      isLongText: false,
     }
   },
   computed: {},
   methods: {
-    parse(html) {
-      this.data = html.replace('...展开', '')
+    parse(data) {
+      this.text = data.text
+      this.isLongText = data.isLongText
+
     }
   },
   mounted() {
-    this.parse(this.html)
+    this.parse(this.data)
   },
   watch: {
-    html(to) {
+    text(to) {
       this.parse(to)
     }
   },
   props: {
-    html: {type: String, required: true,}
+    data: {type: Object, required: true,},
   },
 }
 
 </script>
 
 <style scoped>
-a{
-  color:red;
+a {
+  color: red;
 }
 </style>

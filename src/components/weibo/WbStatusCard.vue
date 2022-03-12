@@ -26,11 +26,7 @@
         </div>
         <!--       正文-->
         <div style="color:#c5c5c5">
-          <div v-for="text in  data.text ">
-            {{ text }}
-          </div>
-          <!--          todo 解析回复-->
-          <!--          <wb-status-content v-if="data.textHtml" :html="data.textHtml" />-->
+          <wb-status-content :data="data" />
         </div>
         <!--        被转发微博-->
         <div v-if="data.retweeted">
@@ -119,7 +115,7 @@ import {getEditHistory} from "@/assets/js/request/statuses";
 
 export default {
   name: "WbStatusCard",
-  components: {MyCopyButton, WbStatusOperationButtons, WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink,},
+  components: {MyCopyButton, WbStatusOperationButtons, WbStatusVideo, WbStatusContent, WbUserAvatar, WbUserLink},
 
   data() {
     return {
