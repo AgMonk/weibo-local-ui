@@ -28,13 +28,14 @@ export default {
   methods: {
     parse(data) {
       this.text = data.text
+      //todo 替换表情icon
       this.textHtml = data.textHtml
       this.isLongText = data.isLongText
     },
     getLongText() {
       getLongText(this.data.blog.uuid).then(res => {
-        this.data.text = res
         this.data.textHtml = res
+        //todo 替换表情icon
         this.textHtml = res
         this.isLongText = false;
       })

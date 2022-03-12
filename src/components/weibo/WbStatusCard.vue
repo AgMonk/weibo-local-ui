@@ -40,8 +40,8 @@
             <el-link :href="`https://weibo.com/ttarticle/p/show?id=${pageInfo.id}`" target="_blank">
               <div>
                 <el-image :src="picBig.url" :style="picBig" />
-                <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px">{{ pageInfo.content[0] }}</span>
-                <el-image :src="pageInfo.typeIcon" style="position: absolute; top: 20px; right: 20px" />
+                <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px;color:white;background-color: rgba(33,37,42,0.71)">{{ pageInfo.content[0] }}</span>
+                <el-image :src="pageInfo.typeIcon" style="position: absolute; top: 20px; right: 20px;background-color: rgba(33,37,42,0.71)" />
               </div>
             </el-link>
           </div>
