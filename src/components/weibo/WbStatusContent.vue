@@ -7,12 +7,15 @@
       <!--      {{ line }}-->
       <span v-html="line"></span>
       <!--          todo 展开请求-->
-      <span v-if="isLongText && i===textHtml.length-1" class="clickable" style="color:#a3ffcc">...[展开]</span>
+      <span v-if="isLongText && i===textHtml.length-1" class="clickable" style="color:#a3ffcc" @click="getLongText">...[展开]</span>
     </div>
   </div>
 </template>
 
 <script>
+import {getLongText} from "@/assets/js/request/statuses";
+import {parseText} from "@/assets/js/request/feed";
+
 export default {
   name: "WbStatusContent",
   data() {
@@ -28,6 +31,15 @@ export default {
       this.text = data.text
       this.textHtml = data.textHtml
       this.isLongText = data.isLongText
+    },
+    getLongText() {
+      getLongText(this.data.blog.uuid).then(res => {
+        const html = res.split('\n').map(i => parseText(i));
+        this.data.text = [res]
+        this.data.textHtml = html
+        this.textHtml = html
+        this.isLongText = false;
+      })
     }
   },
   mounted() {

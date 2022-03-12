@@ -12,9 +12,7 @@ export const getLongText = (uuid) => {
     return wbGetRequest({
         url: '/statuses/longtext',
         params: {id: uuid}
-    }).then(res => {
-        return res.data
-    })
+    }).then(res => res.data.longTextContent)
 }
 
 //获取表情数据 ，解析为字典和分组
