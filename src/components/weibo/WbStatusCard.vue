@@ -17,9 +17,13 @@
               <div>{{ data.timestamp.create.datetime }}</div>
               <my-copy-button :text="`https://weibo.com/${data.authorId}/${data.blog.uuid}`">复制来源网址</my-copy-button>
             </template>
-            <el-link :href="`https://weibo.com/${data.authorId}/${data.blog.uuid}`" target="_blank">
-              <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
-            </el-link>
+            <!--            <el-link :href="`https://weibo.com/${data.authorId}/${data.blog.uuid}`" target="_blank">-->
+            <router-link :to="{name:'单个动态',params:{uid:data.authorId,uuid:data.blog.uuid}}">
+              <el-link :underline="false" type="info">
+                <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
+              </el-link>
+            </router-link>
+            <!--            </el-link>-->
           </el-tooltip>
           <span v-if="data.source"> 来自：{{ data.source }}</span>
           <span v-if="data.counts && data.counts.editCount" class="clickable" @click="getEditHistory(data.id)"> 已编辑({{ data.counts.editCount }})</span>

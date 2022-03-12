@@ -3,6 +3,7 @@
 
 import {getCacheByTime} from "@/assets/js/utils/CacheUtils";
 import {getAllGroups, getTimeline} from "@/assets/js/request/feed";
+import {getStatusDetail} from "@/assets/js/request/statuses";
 
 const getStatusKey = (gid) => `${gid}`
 
@@ -29,6 +30,18 @@ export default {
         method: ({dispatch, commit, state}, payload) => {
 
         },
+        getStatusDetail: ({dispatch, commit, state}, uuid) => {
+            return getStatusDetail(uuid).then(res => {
+                const {content, author, retweeted} = res
+                commit('User/saveUser2Cache', author, {root: true})
+                commit('saveContent2Cache', content)
+                if (retweeted) {
+                    commit('User/saveUser2Cache', retweeted.author, {root: true})
+                    commit('saveContent2Cache', retweeted.content)
+                }
+                return content.id;
+            })
+        },
         getAllGroups: ({dispatch, commit, state}, force) => {
             return getCacheByTime({
                 cacheObj: state.groups,
@@ -53,8 +66,10 @@ export default {
                 // 保存动态信息
                 contents.forEach(i => commit('saveContent2Cache', i))
                 // 保存转发动态信息
+                console.log(retweeted)
                 if (retweeted) {
-                    retweeted.forEach(i => commit('saveContent2Cache', i))
+                    retweeted.map(i => i.content).forEach(i => commit('saveContent2Cache', i))
+                    retweeted.map(i => i.author).forEach(user => commit('User/saveUser2Cache', user, {root: true}));
                 }
 
                 const timeline = state.timeline[key]

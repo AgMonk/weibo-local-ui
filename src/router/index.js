@@ -14,6 +14,16 @@ const routes = [
         ]
     },
     {
+        path: '/u/:uid',
+        name: "用户主页",
+        component: () => import('../views/user/User'),
+        children: [
+            {
+                path: ':uuid', name: '单个动态', component: () => import('../views/user/UserStatus'),
+            },
+        ]
+    },
+    {
         path: '/config',
         name: '配置',
         component: () => import( '../views/Config.vue')

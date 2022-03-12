@@ -1,5 +1,5 @@
 import {wbGetRequest} from "@/assets/js/request/request";
-import {copyField, distinctById} from "@/assets/js/utils/ObjUtils";
+import {copyField} from "@/assets/js/utils/ObjUtils";
 import * as url from "url";
 
 const getTimelinePrefix = (type) => {
@@ -60,21 +60,15 @@ export const getTimeline = ({listId, fid, count = 10, sinceId, maxId, refresh = 
 }
 
 export const parseStatues = (statuses) => {
-    const data = statuses.map(item => parse(item))
+    const data = statuses.map(item => parseSingleStatus(item))
     const contents = data.map(i => i.content)
-    let authors = data.map(i => i.author)
-
-    const retweeted = contents.filter(i => i.retweeted).map(i => i.retweeted)
-    const retweetedAuthors = retweeted.map(i => i.author)
-    const retweetedContents = retweeted.map(i => i.content)
-    authors.push(...retweetedAuthors)
-    authors = distinctById(authors)
-    contents.filter(i => i.retweeted).forEach(item => item.retweeted = item.retweeted.content.id)
-    return {contents, authors, retweeted: retweetedContents};
+    const authors = data.map(i => i.author)
+    const retweeted = data.map(i => i.retweeted).filter(i => i);
+    return {contents, authors, retweeted};
 }
 
 //解析单条状态数据
-const parse = (item) => {
+export const parseSingleStatus = (item) => {
     const {
         created_at,
         id,
@@ -193,8 +187,12 @@ const parse = (item) => {
         iconList: user.icon_list,
     } : {}
 
+    const res = {content, author,};
+
+
     if (retweeted_status) {
-        content.retweeted = parse(retweeted_status)
+        res.retweeted = parseSingleStatus(retweeted_status)
+        content.retweeted = res.retweeted.content.id
     }
 
     if (page_info) {
@@ -229,15 +227,16 @@ const parse = (item) => {
                 }
             })
         }
-        if (content.retweeted) {
-            content.retweeted.content.pageInfo = info
-            content.retweeted.content.urlStruct = content.urlStruct
+        if (res.retweeted) {
+            res.retweeted.content.pageInfo = info
+            res.retweeted.content.urlStruct = content.urlStruct
         } else {
             content.pageInfo = info
         }
     }
 
-    return {content, author,}
+
+    return res
 }
 
 
@@ -245,6 +244,7 @@ export const replaceImageUrl = (url) => url.replace('https:/', '').replace('http
 
 export const parseText = (text) => {
     let t = text;
+    console.log(text)
     let res;
     const topicPattern = /#(.+?)#/g
     while (res = topicPattern.exec(text)) {
@@ -257,16 +257,18 @@ export const parseText = (text) => {
         }
     }
 
-    const atPattern = /@(.+?)[:,\s]/g
+    const atPattern = /@(.+?)[:\s]/g
     while (res = atPattern.exec(text)) {
-        const m = res[1]
-        t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
+        const r0 = res[0]
+        const r1 = res[1]
+        t = t.replace(r0, getUrlHtml(`https://weibo.com/n/${r1}`, r0))
+        console.log(t)
     }
-    const atPattern2 = /@([^>]+?)$/g
-    while (res = atPattern2.exec(t)) {
-        const m = res[1]
-        t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
-    }
+    // const atPattern2 = /@([^>:\s：]+?)$/g
+    // while (res = atPattern2.exec(t)) {
+    //     const m = res[1]
+    //     t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
+    // }
 
     const twiName = /twi[:,：](.+)\s/g
     while (res = twiName.exec(t)) {

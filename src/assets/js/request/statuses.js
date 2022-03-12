@@ -3,7 +3,7 @@
 
 import {wbGetRequest, weiboPostRequest} from "@/assets/js/request/request";
 import {getCache} from "@/assets/js/utils/StorageUtils";
-import {parseStatues, parseText} from "@/assets/js/request/feed";
+import {parseSingleStatus, parseStatues, parseText,} from "@/assets/js/request/feed";
 
 
 //https://weibo.com/ajax/statuses/longtext?id=LiWb10Peh
@@ -93,4 +93,11 @@ export const getComments = ({id, flow = 1, maxId, count = 10, uid}) => {
 
 export const getEditHistory = (mid, page = 1) => {
     return wbGetRequest({url: '/statuses/editHistory', params: {mid, page}}).then(res => parseStatues(res.statuses).contents)
+}
+
+export const getStatusDetail = (id) => {
+    return wbGetRequest({
+        url: '/statuses/show',
+        params: {id}
+    }).then(res => parseSingleStatus(res))
 }
