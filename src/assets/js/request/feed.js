@@ -160,7 +160,7 @@ export const parseSingleStatus = (item) => {
                     text: '查看图片',
                     url: replaceImageUrl(pic_infos[pic_ids[0]].large.url)
                 }
-            } else if (url_title.endsWith('视频')) {
+            } else {
                 return {
                     color: 'green',
                     shortUrl: short_url,
@@ -229,10 +229,13 @@ export const parseSingleStatus = (item) => {
         }
         if (res.retweeted) {
             res.retweeted.content.pageInfo = info
-            res.retweeted.content.urlStruct = content.urlStruct
         } else {
             content.pageInfo = info
         }
+    }
+
+    if (res.retweeted) {
+        res.retweeted.content.urlStruct = content.urlStruct
     }
 
 
@@ -244,7 +247,6 @@ export const replaceImageUrl = (url) => url.replace('https:/', '').replace('http
 
 export const parseText = (text) => {
     let t = text;
-    console.log(text)
     let res;
     const topicPattern = /#(.+?)#/g
     while (res = topicPattern.exec(text)) {

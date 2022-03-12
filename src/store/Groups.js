@@ -33,6 +33,7 @@ export default {
         getStatusDetail: ({dispatch, commit, state}, uuid) => {
             return getStatusDetail(uuid).then(res => {
                 const {content, author, retweeted} = res
+                console.log(res)
                 commit('User/saveUser2Cache', author, {root: true})
                 commit('saveContent2Cache', content)
                 if (retweeted) {
