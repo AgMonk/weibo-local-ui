@@ -73,10 +73,14 @@ export default {
     clickRepost() {
       this.showComment = false;
       this.showRepost = !this.showRepost;
+
+      //  todo 请求转发内容
     },
     clickComment() {
       this.showComment = !this.showComment;
       this.showRepost = false;
+
+      //  todo 请求评论内容
     },
     switchLike() {
       if (this.liked) {

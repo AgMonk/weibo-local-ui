@@ -86,6 +86,8 @@ export default {
             })
         },
         getFirstTimeline: ({dispatch, commit, state}, {listId, type}) => {
+            //todo 如果 非 force 则 不刷新状态
+
             return dispatch('getTimeline', {listId, type})
         },
         getMoreTimeline: ({dispatch, commit, state}, {listId, type}) => {
