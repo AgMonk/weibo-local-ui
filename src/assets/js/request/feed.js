@@ -246,5 +246,10 @@ export const parseText = (text) => {
         t = t.replace(`@${m}`, `<a href="https://weibo.com/n/${m}" target="_blank" style="color:orange">@${m}</a>`)
     }
 
+    const twiName = /twi[:,：](.+)\s/g
+    while (res = twiName.exec(t)) {
+        const m = res[1]
+        t = t.replace(res[0], `<a href="https://twitter.com/${m}" target="_blank" style="color:orange">推特：${m}</a>`)
+    }
     return t
 }
