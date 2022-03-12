@@ -14,7 +14,6 @@
 
 <script>
 import {getLongText} from "@/assets/js/request/statuses";
-import {parseText} from "@/assets/js/request/feed";
 
 export default {
   name: "WbStatusContent",
@@ -34,10 +33,9 @@ export default {
     },
     getLongText() {
       getLongText(this.data.blog.uuid).then(res => {
-        const html = res.split('\n').map(i => parseText(i));
-        this.data.text = [res]
-        this.data.textHtml = html
-        this.textHtml = html
+        this.data.text = res
+        this.data.textHtml = res
+        this.textHtml = res
         this.isLongText = false;
       })
     }

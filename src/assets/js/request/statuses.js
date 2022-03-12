@@ -3,7 +3,7 @@
 
 import {wbGetRequest, weiboPostRequest} from "@/assets/js/request/request";
 import {getCache} from "@/assets/js/utils/StorageUtils";
-import {parseStatues} from "@/assets/js/request/feed";
+import {parseStatues, parseText} from "@/assets/js/request/feed";
 
 
 //https://weibo.com/ajax/statuses/longtext?id=LiWb10Peh
@@ -12,7 +12,7 @@ export const getLongText = (uuid) => {
     return wbGetRequest({
         url: '/statuses/longtext',
         params: {id: uuid}
-    }).then(res => res.data.longTextContent)
+    }).then(res => res.data.longTextContent.split('\n').map(i => parseText(i)))
 }
 
 //获取表情数据 ，解析为字典和分组
