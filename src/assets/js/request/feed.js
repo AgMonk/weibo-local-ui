@@ -259,23 +259,22 @@ export const parseText = (text) => {
 
     const atPattern = /@(.+?)[:\s]/g
     while (res = atPattern.exec(text)) {
-        const r0 = res[0]
         const r1 = res[1]
-        t = t.replace(r0, getUrlHtml(`https://weibo.com/n/${r1}`, r0))
+        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '&' + r1))
         console.log(t)
     }
-    // const atPattern2 = /@([^>:\s：]+?)$/g
-    // while (res = atPattern2.exec(t)) {
-    //     const m = res[1]
-    //     t = t.replace(`@${m}`, getUrlHtml(`https://weibo.com/n/${m}`, '@' + m))
-    // }
+    const atPattern2 = /@([^>:\s：]+?)$/g
+    while (res = atPattern2.exec(t)) {
+        const r1 = res[1]
+        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '&' + r1))
+    }
 
-    const twiName = /twi[:,：](.+)\s/g
+    const twiName = /twi[:：](.+)\s/g
     while (res = twiName.exec(t)) {
         const m = res[1].trim()
         t = t.replace(res[0], getUrlHtml(`https://twitter.com/${m}`, '推特：' + m))
     }
-    return t
+    return t.replace(/&/g, '@')
 }
 
 export const getUrlHtml = (url, text, color = 'orange') => {
