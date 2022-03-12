@@ -263,7 +263,6 @@ export const parseText = (text) => {
     while (res = atPattern.exec(text)) {
         const r1 = res[1]
         t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '&' + r1))
-        console.log(t)
     }
     const atPattern2 = /@([^>:\s：]+?)$/g
     while (res = atPattern2.exec(t)) {

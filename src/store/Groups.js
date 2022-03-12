@@ -79,15 +79,19 @@ export default {
                 const contentsId = contents.map(i => i.id);
                 if (reqMaxId) {
                     timeline.data.push(...contentsId)
+                    timeline.data = timeline.data.distinct()
                 } else {
                     timeline.data = [...contentsId, ...timeline.data].distinct()
                 }
                 return timeline.data
             })
         },
-        getFirstTimeline: ({dispatch, commit, state}, {listId, type}) => {
-            //todo 如果 非 force 则 不刷新状态
-
+        getFirstTimeline: ({dispatch, commit, state}, {listId, type, force}) => {
+            const key = getStatusKey(listId)
+            const cache = state.timeline[key]
+            if (!force && cache && cache.data.length > 0) {
+                return new Promise((r) => r(cache.data))
+            }
             return dispatch('getTimeline', {listId, type})
         },
         getMoreTimeline: ({dispatch, commit, state}, {listId, type}) => {

@@ -11,7 +11,7 @@
            style="margin-left: 5px;"
       >
         <div style="text-align: left">
-          <el-button size="small" type="success" @click="clearTimeline(gid);load($route)">刷新</el-button>
+          <el-button size="small" type="success" @click="clearTimeline(gid);load($route,true)">刷新</el-button>
         </div>
         <div style="border: 3px dashed #ec7878">
 
@@ -73,9 +73,9 @@ export default {
         })
       }
     },
-    load(route) {
+    load(route, force) {
       this.loadingMore = true
-      this.getFirstTimeline(this.getParams(route)).then(res => {
+      this.getFirstTimeline({...this.getParams(route), force}).then(res => {
         this.data = res;
         this.$nextTick(() => this.loadingMore = false)
         this.$nextTick(() => this.$refs['scrollbar'].setScrollTop(0))
