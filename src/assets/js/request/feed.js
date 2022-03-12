@@ -146,7 +146,7 @@ const parse = (item) => {
 
         isLongText,
         text: text_raw.split('\n'),
-        textHtml: text,
+        textHtml: text_raw.split('\n').map(t => parseText(t)),
         length: textLength,
         timestamp,
         source,
@@ -209,3 +209,31 @@ const parse = (item) => {
 
 
 export const replaceImageUrl = (url) => url.replace('https:/', '').replace('http:/', '').replace('.sinaimg.cn', '');
+
+export const parseText = (text) => {
+    let t = text;
+    let res;
+    const topicPattern = /#(.+?)#/g
+    while (res = topicPattern.exec(text)) {
+        const m = res[0]
+        const text = res[1]
+        if (t.includes('[超话]')) {
+            t = t.replace(m, `<a href="https://huati.weibo.com/k/${text.replace('[超话]', '')}" target="_blank" style="color:orange">${text}</a>`)
+        } else {
+            t = t.replace(m, `<a href="https://s.weibo.com/weibo?q=%23${text}%23" target="_blank" style="color:orange">${m}</a>`)
+        }
+    }
+
+    const atPattern = /@(.+?)[:,\s]/g
+    while (res = atPattern.exec(text)) {
+        const m = res[1]
+        t = t.replace(`@${m}`, `<a href="https://weibo.com/n/${m}" target="_blank" style="color:orange">@${m}</a>`)
+    }
+    const atPattern2 = /@([^>]+?)$/g
+    while (res = atPattern2.exec(t)) {
+        const m = res[1]
+        t = t.replace(`@${m}`, `<a href="https://weibo.com/n/${m}" target="_blank" style="color:orange">@${m}</a>`)
+    }
+
+    return t
+}

@@ -2,11 +2,12 @@
 
 <template>
   <div>
-    <div v-for="(line,i) in text">
+    <div v-for="(line,i) in textHtml">
       <!--          todo 解析回复-->
-      {{ line }}
+      <!--      {{ line }}-->
+      <span v-html="line"></span>
       <!--          todo 展开请求-->
-      <span v-if="isLongText && i===text.length-1" class="clickable" style="color:#a3ffcc">...[展开]</span>
+      <span v-if="isLongText && i===textHtml.length-1" class="clickable" style="color:#a3ffcc">...[展开]</span>
     </div>
   </div>
 </template>
@@ -17,6 +18,7 @@ export default {
   data() {
     return {
       text: [],
+      textHtml: [],
       isLongText: false,
     }
   },
@@ -24,16 +26,18 @@ export default {
   methods: {
     parse(data) {
       this.text = data.text
+      this.textHtml = data.textHtml
       this.isLongText = data.isLongText
-
     }
   },
   mounted() {
     this.parse(this.data)
   },
   watch: {
-    text(to) {
-      this.parse(to)
+    data(to) {
+      if (to) {
+        this.parse(to)
+      }
     }
   },
   props: {

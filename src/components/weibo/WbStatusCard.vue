@@ -26,7 +26,7 @@
         </div>
         <!--       正文-->
         <div style="color:#c5c5c5">
-          <wb-status-content :data="data" />
+          <wb-status-content v-if="data" :data="data" />
         </div>
         <!--        被转发微博-->
         <div v-if="data.retweeted">
