@@ -14,6 +14,7 @@
 <script>
 import {mapActions} from "vuex";
 import WbStatusCard from "@/components/weibo/WbStatusCard";
+import {setTitle} from "@/assets/js/request/request";
 
 export default {
   name: "UserStatus",
@@ -27,6 +28,7 @@ export default {
   methods: {
     ...mapActions("Groups", [`getStatusDetail`]),
     load(route) {
+      setTitle("动态")
       const {uid, uuid} = route.params
       this.getStatusDetail(uuid).then(res => {
         this.id = res;

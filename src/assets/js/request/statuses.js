@@ -82,7 +82,7 @@ export const getComments = ({id, flow = 1, maxId, count = 10, uid}) => {
     return wbGetRequest({
         url: '/statuses/buildComments',
         params: {
-            flow, id, count
+            flow, id, count, uid
             , is_reload: 1
             , is_show_bulletin: 2
             , is_mix: 0

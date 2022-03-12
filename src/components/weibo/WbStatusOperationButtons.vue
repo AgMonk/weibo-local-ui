@@ -30,21 +30,21 @@
       </el-icon>
                                                 快转
     </el-col>
-    <el-col :span="6 " class="operation-button"><!--todo 转发-->
+    <el-col :class="`operation-button ${showRepost?'selected':''}`" :span="6 " @click="clickRepost"><!--todo 转发-->
       <el-icon>
         <share />
       </el-icon>
-                                                转发
+                                                                                                    转发
       <span v-if="counts"> ({{ counts.reposts }})</span>
     </el-col>
-    <el-col :span="6 " class="operation-button"><!--todo 评论-->
+    <el-col :class="`operation-button ${showComment?'selected':''}`" :span="6 " @click="clickComment"><!--todo 评论-->
       <el-icon>
         <comment />
       </el-icon>
-                                                评论
+                                                                                                      评论
       <span v-if="counts"> ({{ counts.comments }})</span>
     </el-col>
-    <el-col :class="`operation-button ${liked?'liked':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
+    <el-col :class="`operation-button ${liked?'selected':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
       <el-icon>
         <circle-check />
       </el-icon>
@@ -64,10 +64,20 @@ export default {
   data() {
     return {
       liked: false,
+      showComment: false,
+      showRepost: false,
     }
   },
   computed: {},
   methods: {
+    clickRepost() {
+      this.showComment = false;
+      this.showRepost = !this.showRepost;
+    },
+    clickComment() {
+      this.showComment = !this.showComment;
+      this.showRepost = false;
+    },
     switchLike() {
       if (this.liked) {
         cancelLike(this.id).then(() => {
@@ -109,7 +119,7 @@ export default {
   cursor: pointer;
 }
 
-.liked {
+.selected {
   border-color: #f59315;
   color: #f59315;
 }
