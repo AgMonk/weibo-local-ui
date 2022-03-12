@@ -177,7 +177,7 @@ const parse = (item) => {
     }
 
     if (page_info) {
-        const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4, type_icon, object_id, media_info} = page_info
+        const {page_id, object_type, page_pic, author_id, content1, content2, content3, content4, type_icon, object_id, media_info, pic_info} = page_info
         const info = {
             type: object_type,
             id: page_id,
@@ -196,6 +196,17 @@ const parse = (item) => {
                 h5: media_info.h5_url,
                 mp4_720p: media_info.mp4_720p_mp4,
             }
+        }
+        if (pic_info) {
+            info.picInfo = {}
+            Object.keys(pic_info).forEach(key => {
+                const {height, url, width} = pic_info[key]
+                info.picInfo[key] = {
+                    url: replaceImageUrl(url),
+                    height: Number(height) + 'px',
+                    width: Number(width) + 'px',
+                }
+            })
         }
         if (content.retweeted) {
             content.retweeted.content.pageInfo = info

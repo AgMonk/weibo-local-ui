@@ -38,8 +38,8 @@
           <!--          文章-->
           <div v-if="pageInfo.type==='article'">
             <el-link :href="`https://weibo.com/ttarticle/p/show?id=${pageInfo.id}`" target="_blank">
-              <div style="max-width: 50%">
-                <el-image :src="pageInfo.backgroundImage" />
+              <div>
+                <el-image :src="picBig.url" :style="picBig" />
                 <span style="position: absolute; bottom: 20px; left: 20px;font-size: 20px">{{ pageInfo.content[0] }}</span>
                 <el-image :src="pageInfo.typeIcon" style="position: absolute; top: 20px; right: 20px" />
               </div>
@@ -123,6 +123,7 @@ export default {
       thumbnail: [],
       largest: [],
       pageInfo: undefined,
+      picBig: undefined,
       imageStyle: {
         width: "150px",
         height: "150px",
@@ -143,10 +144,16 @@ export default {
     },
     load(id) {
       const data = id > 0 ? this.getStatusFromCache()(id) : this.status;
+      if (!data) {
+        return;
+      }
       this.data = data
       this.pageInfo = data.pageInfo
-      if (data.id === 4745480598194240) {
-        console.log(data.pageInfo)
+      if (data.pageInfo) {
+        const picInfo = data.pageInfo.picInfo;
+        if (picInfo) {
+          this.picBig = picInfo.pic_big;
+        }
       }
       const pics = data.pictures;
       this.largest = pics.map(i => replaceImageUrl(i.urls.largest.url))
