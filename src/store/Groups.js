@@ -80,7 +80,7 @@ export default {
                 if (reqMaxId) {
                     timeline.data.push(...contentsId)
                 } else {
-                    timeline.data = [...contentsId, ...timeline.data]
+                    timeline.data = [...contentsId, ...timeline.data].distinct()
                 }
                 return timeline.data
             })
