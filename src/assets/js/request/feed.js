@@ -144,7 +144,7 @@ const parse = (item) => {
         //todo
         // visible,
 
-        isLongText,
+        isLongText: isLongText && text.includes('...<span class="expand">展开</span>'),
         text: text_raw.split('\n'),
         textHtml: text_raw.split('\n').map(t => parseText(t)),
         length: textLength,
