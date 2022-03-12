@@ -74,7 +74,6 @@ export const parseStatues = (statuses) => {
 
 //解析单条状态数据
 const parse = (item) => {
-    //todo 编辑时间
     const {
         created_at,
         id,
@@ -82,6 +81,7 @@ const parse = (item) => {
         mblogid,
         mblogtype,
         mlevel,
+        edit_count,
         pic_focus_point,
         pic_infos,
         pic_num,
@@ -105,6 +105,7 @@ const parse = (item) => {
         attitudes: attitudes_count,
         comments: comments_count,
         attitudesStatus: attitudes_status,
+        editCount: edit_count,
     }
 
     //todo 意义未明

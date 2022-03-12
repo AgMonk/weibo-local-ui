@@ -22,6 +22,7 @@
             </el-link>
           </el-tooltip>
           <span v-if="data.source"> 来自：{{ data.source }}</span>
+          <span v-if="data.counts && data.counts.editCount" class="clickable" @click="getEditHistory(data.id)"> 已编辑({{ data.counts.editCount }})</span>
         </div>
         <!--       正文-->
         <div style="color:#c5c5c5">
@@ -90,9 +91,16 @@
           </span>
         </div>
         <!--       转发、评论、点赞-->
-        <div v-if="data">
+        <div v-if="data && !disableOperationButtons">
           <wb-status-operation-buttons v-if="data.counts" :id="data.id" :counts="data.counts" :is-retweeted="isRetweeted" />
         </div>
+
+
+        <el-dialog v-model="showHistory" append-to-body title="编辑记录" width="70%">
+          <div v-for="status in history" style="border: 1px solid #949494;margin-bottom: 2px">
+            <wb-status-card :status="status" disable-avatar disable-operation-buttons />
+          </div>
+        </el-dialog>
       </el-main>
     </el-container>
   </div>
@@ -107,6 +115,7 @@ import {replaceImageUrl} from "@/assets/js/request/feed";
 import WbStatusVideo from "@/components/weibo/WbStatusVideo";
 import WbStatusOperationButtons from "@/components/weibo/WbStatusOperationButtons";
 import MyCopyButton from "@/components/common/my-copy-button";
+import {getEditHistory} from "@/assets/js/request/statuses";
 
 export default {
   name: "WbStatusCard",
@@ -122,14 +131,22 @@ export default {
         width: "150px",
         height: "150px",
         "border-radius": "15px",
-      }
+      },
+      history: [],
+      showHistory: false,
     }
   },
   computed: {},
   methods: {
     ...mapGetters('Groups', [`getStatusFromCache`]),
+    getEditHistory(id) {
+      getEditHistory(id).then(res => {
+        this.history = res;
+        this.showHistory = true;
+      })
+    },
     load(id) {
-      const data = this.getStatusFromCache()(id);
+      const data = id > 0 ? this.getStatusFromCache()(id) : this.status;
       this.data = data
       this.pageInfo = data.pageInfo
       if (data.id === 4745480598194240) {
@@ -157,8 +174,10 @@ export default {
     },
   },
   props: {
-    id: {type: Number, required: true,},
+    status: {type: Object,},
+    id: {type: Number,},
     disableAvatar: {type: Boolean, default: false},
+    disableOperationButtons: {type: Boolean, default: false},
     isRetweeted: {type: Boolean, default: false},
   },
 }
