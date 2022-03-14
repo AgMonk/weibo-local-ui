@@ -1,6 +1,7 @@
 import {wbGetRequest} from "@/assets/js/request/request";
 import {copyField} from "@/assets/js/utils/ObjUtils";
 import * as url from "url";
+import {unEscape} from "@/assets/js/utils/StringUtils";
 
 const getTimelinePrefix = (type) => {
     switch (type) {
@@ -275,7 +276,7 @@ export const parseText = (text) => {
         const m = res[1].trim()
         t = t.replace(res[0], getUrlHtml(`https://twitter.com/${m}`, '推特：' + m))
     }
-    return t.replace(/&/g, '@')
+    return unEscape(t).replace(/&/g, '@')
 }
 
 export const getUrlHtml = (url, text, color = 'orange') => {
