@@ -1,8 +1,8 @@
 <template>
   <div v-if="data" style="color:white;">
     <el-container direction="horizontal">
-      <el-aside v-if="!disableAvatar" width="50px">
-        <wb-user-avatar v-if="data.authorId" :id="data.authorId" />
+      <el-aside v-if="!disableAvatar" :width="(isComment?30:50)+'px'">
+        <wb-user-avatar v-if="data.authorId" :id="data.authorId" :size="isComment?30:50" />
       </el-aside>
       <el-main style="text-align: left">
         <!--      微博名 -->
@@ -102,6 +102,12 @@
         <!--       转发、评论、点赞-->
         <div v-if="data && !disableOperationButtons && !isComment">
           <wb-status-operation-buttons v-if="data.counts" :id="data.id" :counts="data.counts" :is-retweeted="isRetweeted" />
+        </div>
+
+        <div v-if="data.comments">
+          <div v-for="id in data.comments">
+            <wb-status-card :id="id" is-comment />
+          </div>
         </div>
 
 

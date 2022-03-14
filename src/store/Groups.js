@@ -37,12 +37,18 @@ export default {
         },
         getComments: ({dispatch, commit, state}, {id, flow, maxId, count}) => {
             return getComments({id, flow, maxId, count}).then(res => {
-                const {contents, authors, total, maxId} = res
+                const {contents, authors, total, maxId, comments} = res
 
                 //保存作者信息
                 authors.forEach(user => commit('User/saveUser2Cache', user, {root: true}));
                 // 保存动态信息
                 contents.forEach(i => commit('saveContent2Cache', i))
+
+                if (comments) {
+                    comments.map(i => i.author).forEach(user => commit('User/saveUser2Cache', user, {root: true}));
+                    comments.map(i => i.content).forEach(i => commit('saveContent2Cache', i))
+                }
+
                 console.log(contents)
                 return {
                     contents: contents.map(i => i.id),

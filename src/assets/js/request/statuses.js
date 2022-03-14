@@ -131,7 +131,8 @@ export const getComments = ({id, flow = 1, maxId, count = 20, uid, type}) => {
         const data = res.data.map(i => parseSingleStatus(i))
         const contents = data.map(i => i.content)
         const authors = data.map(i => i.author)
-        return {contents, authors, total, maxId}
+        const comments = data.map(i => i.comments).filter(i => i).flatMap(i => i)
+        return {contents, authors, total, maxId, comments}
     })
 }
 

@@ -1,61 +1,63 @@
 <template>
-  <!--  被转发微博 、 评论模式-->
-  <div v-if="isRetweeted || isComment" style="text-align: right">
-    <span class="operation-button">
-      <el-icon>
-        <share />
-      </el-icon>
-      快
-    </span>
-    <span class="operation-button">
-      <el-icon>
-        <share />
-      </el-icon>
-      <span v-if="counts"> ({{ counts.reposts }})</span>
-    </span>
-    <span class="operation-button">
-      <el-icon>
-        <comment />
-      </el-icon>
-      <span v-if="counts"> ({{ counts.comments }})</span></span>
-    <span :class="`operation-button ${liked?'selected':''}`" @click="switchLike">
-      <el-icon>
-        <circle-check />
-      </el-icon>
-      <span v-if="counts"> ({{ counts.attitudes }})</span></span>
-  </div>
-  <!--  完整模式 -->
-  <div v-else>
-    <el-row>
-      <el-col :span="6 " class="operation-button"><!--todo 快转-->
+  <div><!--  被转发微博 、 评论模式-->
+    <div v-if="isRetweeted || isComment" style="text-align: right">
+      <span class="operation-button">
         <el-icon>
           <share />
         </el-icon>
-                                                  快转
-      </el-col>
-      <el-col :class="`operation-button ${showRepost?'selected':''}`" :span="6 " @click="clickRepost"><!--todo 转发-->
+        快
+      </span>
+      <span class="operation-button">
         <el-icon>
           <share />
         </el-icon>
-                                                                                                      转发
         <span v-if="counts"> ({{ counts.reposts }})</span>
-      </el-col>
-      <el-col :class="`operation-button ${showComment?'selected':''}`" :span="6 " @click="clickComment"><!--todo 评论-->
+      </span>
+      <span :class="`operation-button ${showComment?'selected':''}`" @click="clickComment">
         <el-icon>
           <comment />
         </el-icon>
-                                                                                                        评论
-        <span v-if="counts"> ({{ counts.comments }})</span>
-      </el-col>
-      <el-col :class="`operation-button ${liked?'selected':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
+        <span v-if="counts"> ({{ counts.comments }})</span></span>
+      <span :class="`operation-button ${liked?'selected':''}`" @click="switchLike">
         <el-icon>
           <circle-check />
         </el-icon>
-        <span v-if="counts"> ({{ counts.attitudes }})</span>
-      </el-col>
-    </el-row>
+        <span v-if="counts"> ({{ counts.attitudes }})</span></span>
+    </div>
+       <!--  完整模式 -->
+    <div v-else>
+      <el-row>
+        <el-col :span="6 " class="operation-button"><!--todo 快转-->
+          <el-icon>
+            <share />
+          </el-icon>
+                                                    快转
+        </el-col>
+        <el-col :class="`operation-button ${showRepost?'selected':''}`" :span="6 " @click="clickRepost"><!--todo 转发-->
+          <el-icon>
+            <share />
+          </el-icon>
+                                                                                                        转发
+          <span v-if="counts"> ({{ counts.reposts }})</span>
+        </el-col>
+        <el-col :class="`operation-button ${showComment?'selected':''}`" :span="6 " @click="clickComment"><!--todo 评论-->
+          <el-icon>
+            <comment />
+          </el-icon>
+                                                                                                          评论
+          <span v-if="counts"> ({{ counts.comments }})</span>
+        </el-col>
+        <el-col :class="`operation-button ${liked?'selected':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
+          <el-icon>
+            <circle-check />
+          </el-icon>
+          <span v-if="counts"> ({{ counts.attitudes }})</span>
+        </el-col>
+      </el-row>
+    </div>
 
-    <!--    评论-->
+
+       <!--    评论-->
     <div v-if="showComment || showRepost" v-loading="loading"
          :element-loading-spinner="svg"
          element-loading-background="rgba(0, 0, 0, 0.8)"

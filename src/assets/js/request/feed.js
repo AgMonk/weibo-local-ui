@@ -94,13 +94,15 @@ export const parseSingleStatus = (item) => {
         comments_count,
         like_counts,
         attitudes_status,
+        total_number,
+        comments,
     } = item
 
     //数量
     const counts = {
         reposts: reposts_count,
         attitudes: attitudes_count ? attitudes_count : like_counts,
-        comments: comments_count,
+        comments: comments_count ? comments_count : total_number,
         attitudesStatus: attitudes_status,
         editCount: edit_count,
     }
@@ -194,6 +196,12 @@ export const parseSingleStatus = (item) => {
     if (retweeted_status) {
         res.retweeted = parseSingleStatus(retweeted_status)
         content.retweeted = res.retweeted.content.id
+    }
+
+    if (comments && comments.length > 0) {
+        const data = comments.map(i => parseSingleStatus(i))
+        res.comments = data
+        content.comments = data.map(i => i.content.id);
     }
 
     if (page_info) {
