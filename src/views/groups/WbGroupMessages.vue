@@ -16,7 +16,7 @@
         <div style="border: 3px dashed #ec7878">
 
           <div id="动态">
-            <el-scrollbar ref="scrollbar" :height="`${height}px`">
+            <el-scrollbar ref="scrollbar" :height="`${height}px`" @scroll="scroll">
               <div v-infinite-scroll="getMore">
                 <div v-for="id in data" style="border: 1px solid #949494;margin-bottom: 2px">
                   <wb-status-card :id="id" />
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {mapActions, mapMutations, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import WbStatusCard from "@/components/weibo/WbStatusCard";
 import {getScreenInfo} from "@/assets/js/utils/ScreenUtils";
 
@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       gid: undefined,
-      loadingMore: false,
+      loadingMore: true,
       data: [],
       height: 650,
       interval: undefined,
@@ -58,10 +58,18 @@ export default {
   },
   methods: {
     ...mapActions("Groups", [`getFirstTimeline`, `getTimeline`, `getMoreTimeline`]),
-    ...mapMutations("Groups", [`clearTimeline`]),
+    ...mapMutations("Groups", [`clearTimeline`, `setScroll`]),
+    ...mapGetters("Groups", [`getScroll`]),
+    scroll(e) {
+      this.setScroll({
+        id: this.gid,
+        scroll: e,
+      })
+    },
     getParams(route) {
       const listId = Number(route.params.gid)
       const type = route.params.type
+      this.gid = listId
       return {listId, type}
     },
     getMore() {
@@ -78,7 +86,14 @@ export default {
       this.getFirstTimeline({...this.getParams(route), force}).then(res => {
         this.data = res;
         this.$nextTick(() => this.loadingMore = false)
-        this.$nextTick(() => this.$refs['scrollbar'].setScrollTop(0))
+        this.$nextTick(() => {
+          setTimeout(() => {
+            const {scrollTop, scrollLeft} = this.getScroll()(this.gid)
+            console.log(scrollTop)
+            this.$refs['scrollbar'].setScrollTop(force ? 0 : scrollTop)
+            this.$refs['scrollbar'].setScrollLeft(force ? 0 : scrollLeft)
+          }, 1000)
+        })
       })
     }
   },

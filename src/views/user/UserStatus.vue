@@ -41,7 +41,9 @@ export default {
   },
   watch: {
     $route(to) {
-      this.load(to)
+      if (to.name === '单个动态') {
+        this.load(to)
+      }
     }
   },
   props: {},

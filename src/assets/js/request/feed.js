@@ -247,7 +247,7 @@ export const parseSingleStatus = (item) => {
 export const replaceImageUrl = (url) => url.replace('https:/', '').replace('http:/', '').replace('.sinaimg.cn', '');
 
 export const parseText = (text) => {
-    let t = text;
+    let t = unEscape(text);
     let res;
     const topicPattern = /#(.+?)#/g
     while (res = topicPattern.exec(text)) {
@@ -263,12 +263,12 @@ export const parseText = (text) => {
     const atPattern = /@(.+?)[:\s]/g
     while (res = atPattern.exec(text)) {
         const r1 = res[1]
-        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '&' + r1))
+        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '##' + r1))
     }
     const atPattern2 = /@([^>:\s：]+?)$/g
     while (res = atPattern2.exec(t)) {
         const r1 = res[1]
-        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '&' + r1))
+        t = t.replace('@' + r1, getUrlHtml(`https://weibo.com/n/${r1}`, '##' + r1))
     }
 
     const twiName = /twi[:：](.+)\s/g
@@ -276,7 +276,7 @@ export const parseText = (text) => {
         const m = res[1].trim()
         t = t.replace(res[0], getUrlHtml(`https://twitter.com/${m}`, '推特：' + m))
     }
-    return unEscape(t).replace(/&/g, '@')
+    return t.replace(/##/g, '@')
 }
 
 export const getUrlHtml = (url, text, color = 'orange') => {

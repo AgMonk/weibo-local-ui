@@ -13,6 +13,7 @@ export default {
         cache: {},
         groups: {},
         timeline: {},
+        timelineScroll: {},
     },
     mutations: {
         method(state, payload) {
@@ -25,6 +26,10 @@ export default {
         clearTimeline(state, gid) {
             state.timeline[`${gid}`] = {data: []}
         },
+        setScroll(state, {id, scroll}) {
+            const key = getStatusKey(id)
+            state.timelineScroll[key] = scroll
+        }
     },
     actions: {
         method: ({dispatch, commit, state}, payload) => {
@@ -107,6 +112,7 @@ export default {
             if (!force && cache && cache.data.length > 0) {
                 return new Promise((r) => r(cache.data))
             }
+            state.timelineScroll[key] = undefined;
             return dispatch('getTimeline', {listId, type})
         },
         getMoreTimeline: ({dispatch, commit, state}, {listId, type}) => {
@@ -120,5 +126,9 @@ export default {
             const key = getStatusKey(id)
             return state.cache[key]
         },
+        getScroll: (state) => (id) => {
+            const key = getStatusKey(id)
+            return state.timelineScroll[key] ? state.timelineScroll[key] : {scrollTop: 0, scrollLeft: 0}
+        }
     },
 }

@@ -77,7 +77,6 @@
           </div>
         </div>
       </el-scrollbar>
-
     </div>
   </div>
 
@@ -186,6 +185,10 @@ export default {
   },
   mounted() {
     this.liked = !!this.counts.attitudesStatus
+
+    if (this.$route.name === '单个动态' && !this.isComment && !this.isRetweeted && this.counts.comments > 0) {
+      this.clickComment()
+    }
   },
   watch: {
     counts(to) {

@@ -94,7 +94,6 @@
                 :style="imageStyle"
                 fit="cover"
                 hide-on-click-modal
-                lazy
                 referrer-policy="no-referrer"
             />
             <br v-if="thumbnail.length===9 && i%3===2" />
