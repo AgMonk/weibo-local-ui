@@ -4,7 +4,7 @@
     <!--  <el-container direction="horizontal">-->
     <!--    <el-header></el-header>-->
     <el-main>
-      <wb-status-card v-if="id" :id="id" />
+      <wb-status-card v-if="id" :id="id" ref="user-status" />
     </el-main>
     <el-footer></el-footer>
   </el-container>
@@ -32,6 +32,7 @@ export default {
       const {uid, uuid} = route.params
       this.getStatusDetail(uuid).then(res => {
         this.id = res;
+
       })
     },
   },

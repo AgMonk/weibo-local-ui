@@ -3,10 +3,8 @@
 <template>
   <div>
     <div v-for="(line,i) in textHtml">
-      <!--          todo 解析回复-->
       <!--      {{ line }}-->
       <span v-html="line"></span>
-      <!--          todo 展开请求-->
       <span v-if="isLongText && i===textHtml.length-1" class="clickable" style="color:#a3ffcc" @click="getLongText">...[展开]</span>
     </div>
   </div>
@@ -63,7 +61,7 @@ export default {
         const m = res[0]
         const e = this.getEmotionFromMap()(m);
         if (e) {
-          t = t.replace(m, `<img alt="" src="${e.url}"/>`)
+          t = t.replace(m, `<img alt="" style="width:20px;height:20px;" src="${e.url}"/>`)
         }
       }
       return t;

@@ -1,17 +1,18 @@
 <template>
-  <el-menu v-loading="loading"
-           :default-active="$route.path"
-           :default-openeds="['默认分组','我的分组']"
-           :element-loading-spinner="svg"
-           active-text-color="#ffd04b"
-           background-color="#545c64"
-           direction="vertical"
-           element-loading-background="rgba(0, 0, 0, 0.8)"
-           element-loading-svg-view-box="-10, -10, 50, 50"
-           element-loading-text="加载中..."
-           router
-           text-color="#fff"
-           @select="select"
+  <el-menu
+      v-loading="loading"
+      :default-active="$route.path"
+      :default-openeds="['默认分组','我的分组']"
+      :element-loading-spinner="svg"
+      active-text-color="#ffd04b"
+      background-color="#545c64"
+      direction="vertical"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      element-loading-svg-view-box="-10, -10, 50, 50"
+      element-loading-text="加载中..."
+      router
+      text-color="#fff"
+      @select="select"
   >
     <el-sub-menu v-for="group in groups" :index="group.title" style="min-width:150px">
       <template #title>

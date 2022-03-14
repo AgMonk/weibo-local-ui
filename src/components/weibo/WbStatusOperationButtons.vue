@@ -1,5 +1,6 @@
 <template>
-  <div v-if="isRetweeted" style="text-align: right">
+  <!--  被转发微博 、 评论模式-->
+  <div v-if="isRetweeted || isComment" style="text-align: right">
     <span class="operation-button">
       <el-icon>
         <share />
@@ -23,53 +24,94 @@
       </el-icon>
       <span v-if="counts"> ({{ counts.attitudes }})</span></span>
   </div>
-  <el-row v-else>
-    <el-col :span="6 " class="operation-button"><!--todo 快转-->
-      <el-icon>
-        <share />
-      </el-icon>
-                                                快转
-    </el-col>
-    <el-col :class="`operation-button ${showRepost?'selected':''}`" :span="6 " @click="clickRepost"><!--todo 转发-->
-      <el-icon>
-        <share />
-      </el-icon>
-                                                                                                    转发
-      <span v-if="counts"> ({{ counts.reposts }})</span>
-    </el-col>
-    <el-col :class="`operation-button ${showComment?'selected':''}`" :span="6 " @click="clickComment"><!--todo 评论-->
-      <el-icon>
-        <comment />
-      </el-icon>
-                                                                                                      评论
-      <span v-if="counts"> ({{ counts.comments }})</span>
-    </el-col>
-    <el-col :class="`operation-button ${liked?'selected':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
-      <el-icon>
-        <circle-check />
-      </el-icon>
-      <span v-if="counts"> ({{ counts.attitudes }})</span>
-    </el-col>
-  </el-row>
+  <!--  完整模式 -->
+  <div v-else>
+    <el-row>
+      <el-col :span="6 " class="operation-button"><!--todo 快转-->
+        <el-icon>
+          <share />
+        </el-icon>
+                                                  快转
+      </el-col>
+      <el-col :class="`operation-button ${showRepost?'selected':''}`" :span="6 " @click="clickRepost"><!--todo 转发-->
+        <el-icon>
+          <share />
+        </el-icon>
+                                                                                                      转发
+        <span v-if="counts"> ({{ counts.reposts }})</span>
+      </el-col>
+      <el-col :class="`operation-button ${showComment?'selected':''}`" :span="6 " @click="clickComment"><!--todo 评论-->
+        <el-icon>
+          <comment />
+        </el-icon>
+                                                                                                        评论
+        <span v-if="counts"> ({{ counts.comments }})</span>
+      </el-col>
+      <el-col :class="`operation-button ${liked?'selected':''}`" :span="6 " @click="switchLike"><!--todo 点赞-->
+        <el-icon>
+          <circle-check />
+        </el-icon>
+        <span v-if="counts"> ({{ counts.attitudes }})</span>
+      </el-col>
+    </el-row>
+
+    <!--    评论-->
+    <div v-if="showComment" v-loading="loading"
+         :element-loading-spinner="svg"
+         element-loading-background="rgba(0, 0, 0, 0.8)"
+         element-loading-svg-view-box="-10, -10, 50, 50"
+         element-loading-text="加载中..."
+    >
+      <el-scrollbar ref="scrollbar" height="400px">
+        <div v-infinite-scroll="getStatusComments" :infinite-scroll-disabled="comments.params.maxId===0">
+          <div v-for="id in comments.data" style="margin-top: 2px">
+            <wb-status-card :id="id" is-comment />
+          </div>
+          <div style="text-align: center">
+            <div v-if="comments.params.maxId!==0">
+              加载中...
+            </div>
+            <div v-else>
+              已加载全部评论
+            </div>
+          </div>
+        </div>
+      </el-scrollbar>
+
+    </div>
+  </div>
 
 </template>
 <script>
 import {CircleCheck, Comment, Share} from "@element-plus/icons-vue";
 import {cancelLike, setLike} from "@/assets/js/request/statuses";
 import {ElMessage} from "element-plus";
+import {mapActions, mapState} from "vuex";
+import WbStatusCard from "@/components/weibo/WbStatusCard";
 
 export default {
   name: "WbStatusOperationButtons",
-  components: {Share, Comment, CircleCheck},
+  components: {WbStatusCard, Share, Comment, CircleCheck},
   data() {
     return {
       liked: false,
+      loading: false,
       showComment: false,
       showRepost: false,
+      comments: {
+        params: {
+          flow: 1,
+          maxId: undefined,
+        },
+        data: [],
+      },
     }
   },
-  computed: {},
+  computed: {
+    ...mapState("Loading", [`svg`]),
+  },
   methods: {
+    ...mapActions("Groups", [`getComments`]),
     clickRepost() {
       this.showComment = false;
       this.showRepost = !this.showRepost;
@@ -81,6 +123,27 @@ export default {
       this.showRepost = false;
 
       //  todo 请求评论内容
+      if (this.showComment && this.comments.data.length === 0) {
+        this.getStatusComments()
+      }
+      if (!this.showComment) {
+        this.comments.data = []
+        this.comments.params.maxId = undefined
+      }
+    },
+    getStatusComments() {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      const {flow, maxId} = this.comments.params
+      this.getComments({id: this.id, flow, maxId,}).then(res => {
+        const {contents, total, maxId} = res
+        this.counts.comments = total;
+        this.comments.params.maxId = maxId;
+        this.comments.data.push(...contents)
+        this.loading = false;
+      })
     },
     switchLike() {
       if (this.liked) {
@@ -107,6 +170,7 @@ export default {
   },
   props: {
     isRetweeted: {type: Boolean, default: false},
+    isComment: {type: Boolean, default: false},
     counts: {type: Object},
     id: {type: Number, required: true,},
   },

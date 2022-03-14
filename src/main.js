@@ -11,12 +11,18 @@ import './assets/js/base/DateEnhancement'
 import './assets/js/base/ArrayEnhancement'
 import './assets/css/global.css'
 import VideoPlayer from 'vue-video-player/src'
+import WbStatusOperationButtons from "@/components/weibo/WbStatusOperationButtons";
+import WbStatusCard from "@/components/weibo/WbStatusCard";
 
 require('vue-video-player/src/custom-theme.css')
 require('video.js/dist/video-js.css')
 
 createApp(App)
+    .component(WbStatusOperationButtons.name, WbStatusOperationButtons)
+    .component(WbStatusCard.name, WbStatusCard)
     .use(VideoPlayer)
     .use(Clipboard)
     .use(ElementPlus, {locale: zhCn,})
-    .use(store).use(router).mount('#app')
+    .use(store).use(router)
+    .mount('#app')
+

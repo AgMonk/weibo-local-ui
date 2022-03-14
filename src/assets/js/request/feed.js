@@ -91,13 +91,14 @@ export const parseSingleStatus = (item) => {
         reposts_count,
         attitudes_count,
         comments_count,
+        like_counts,
         attitudes_status,
     } = item
 
     //数量
     const counts = {
         reposts: reposts_count,
-        attitudes: attitudes_count,
+        attitudes: attitudes_count ? attitudes_count : like_counts,
         comments: comments_count,
         attitudesStatus: attitudes_status,
         editCount: edit_count,
@@ -110,7 +111,6 @@ export const parseSingleStatus = (item) => {
         level: mlevel,
     }
 
-    //todo
     const pictures = !pic_infos ? [] : Object.keys(pic_infos).map(i => pic_infos[i]).map(item => {
         const {thumbnail, bmiddle, large, original, largest, mw2000, focus_point, object_id, pic_id, photo_tag, type, pic_status} = item
         const urlFields = ['url', 'height', 'width']

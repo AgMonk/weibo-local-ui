@@ -3,7 +3,7 @@
 
 import {getCacheByTime} from "@/assets/js/utils/CacheUtils";
 import {getAllGroups, getTimeline} from "@/assets/js/request/feed";
-import {getStatusDetail} from "@/assets/js/request/statuses";
+import {getComments, getStatusDetail} from "@/assets/js/request/statuses";
 
 const getStatusKey = (gid) => `${gid}`
 
@@ -29,6 +29,21 @@ export default {
     actions: {
         method: ({dispatch, commit, state}, payload) => {
 
+        },
+        getComments: ({dispatch, commit, state}, {id, flow, maxId, count}) => {
+            return getComments({id, flow, maxId, count}).then(res => {
+                const {contents, authors, total, maxId} = res
+
+                //保存作者信息
+                authors.forEach(user => commit('User/saveUser2Cache', user, {root: true}));
+                // 保存动态信息
+                contents.forEach(i => commit('saveContent2Cache', i))
+                console.log(contents)
+                return {
+                    contents: contents.map(i => i.id),
+                    total, maxId,
+                }
+            })
         },
         getStatusDetail: ({dispatch, commit, state}, uuid) => {
             return getStatusDetail(uuid).then(res => {

@@ -2,7 +2,6 @@
   <div v-if="data" style="color:white;">
     <el-container direction="horizontal">
       <el-aside v-if="!disableAvatar" width="50px">
-        <!--       todo 头像-->
         <wb-user-avatar v-if="data.authorId" :id="data.authorId" />
       </el-aside>
       <el-main style="text-align: left">
@@ -10,14 +9,26 @@
         <b>
           <wb-user-link v-if="data.authorId" :id="data.authorId" />
         </b>
+        <span v-if="data && isComment">:</span>
+        <wb-status-content v-if="data && isComment" :data="data" style="display:inline-block" />
+
         <!--      时间 来自 -->
         <div v-if="data.timestamp" class="common-text">
-          <el-tooltip effect="light">
+          <div v-if="isComment">
+            <el-row>
+              <el-col :span="12" style="text-align:left">
+                <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
+              </el-col>
+              <el-col :span="12" style="text-align:right">
+                <wb-status-operation-buttons v-if="data.counts" :id="data.id" :counts="data.counts" is-comment style="display:inline-block" />
+              </el-col>
+            </el-row>
+          </div>
+          <el-tooltip v-else effect="light">
             <template #content>
               <div>{{ data.timestamp.create.datetime }}</div>
               <my-copy-button :text="`https://weibo.com/${data.authorId}/${data.blog.uuid}`">复制来源网址</my-copy-button>
             </template>
-            <!--            <el-link :href="`https://weibo.com/${data.authorId}/${data.blog.uuid}`" target="_blank">-->
             <router-link :to="{name:'单个动态',params:{uid:data.authorId,uuid:data.blog.uuid}}">
               <el-link :underline="false" type="info">
                 <span class="common-text">{{ data.timestamp.create.before || data.timestamp.create.datetime }}</span>
@@ -27,11 +38,10 @@
           </el-tooltip>
           <span v-if="data.source"> 来自：{{ data.source }}</span>
           <span v-if="data.counts && data.counts.editCount" class="clickable" @click="getEditHistory(data.id)"> 已编辑({{ data.counts.editCount }})</span>
+
         </div>
         <!--       正文-->
-        <div style="color:#c5c5c5">
-          <wb-status-content v-if="data" :data="data" />
-        </div>
+        <wb-status-content v-if="data && !isComment" :data="data" />
         <!--        被转发微博-->
         <div v-if="data.retweeted">
           <el-divider content-position="left">转发</el-divider>
@@ -91,7 +101,7 @@
           </span>
         </div>
         <!--       转发、评论、点赞-->
-        <div v-if="data && !disableOperationButtons">
+        <div v-if="data && !disableOperationButtons && !isComment">
           <wb-status-operation-buttons v-if="data.counts" :id="data.id" :counts="data.counts" :is-retweeted="isRetweeted" />
         </div>
 
@@ -186,6 +196,7 @@ export default {
     disableAvatar: {type: Boolean, default: false},
     disableOperationButtons: {type: Boolean, default: false},
     isRetweeted: {type: Boolean, default: false},
+    isComment: {type: Boolean, default: false},
   },
 }
 
