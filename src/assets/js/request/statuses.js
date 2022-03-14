@@ -50,6 +50,20 @@ export const setLike = (id) => {
     })
 }
 
+export const updateLike = (id) => {
+    return weiboPostRequest({
+        url: '/statuses/updateLike',
+        data: {
+            object_id: `${id}`,
+            object_type: "comment"
+        },
+        headers: {
+            'x-xsrf-token': getCache('token'),
+        }
+    })
+}
+
+
 export const cancelLike = (id) => {
     return weiboPostRequest({
         url: '/statuses/cancelLike',
@@ -59,6 +73,20 @@ export const cancelLike = (id) => {
         }
     })
 }
+
+export const destroyLike = (id) => {
+    return weiboPostRequest({
+        url: '/statuses/destroyLike',
+        data: {
+            object_id: `${id}`,
+            object_type: "comment"
+        },
+        headers: {
+            'x-xsrf-token': getCache('token'),
+        }
+    })
+}
+
 
 export const normalRepost = ({id, comment, isRepost = false, isComment = false,}) => {
     return weiboPostRequest({

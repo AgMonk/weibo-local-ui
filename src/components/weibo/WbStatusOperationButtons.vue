@@ -18,7 +18,7 @@
         <comment />
       </el-icon>
       <span v-if="counts"> ({{ counts.comments }})</span></span>
-    <span :class="`operation-button ${liked?'liked':''}`" @click="switchLike">
+    <span :class="`operation-button ${liked?'selected':''}`" @click="switchLike">
       <el-icon>
         <circle-check />
       </el-icon>
@@ -56,19 +56,19 @@
     </el-row>
 
     <!--    评论-->
-    <div v-if="showComment" v-loading="loading"
+    <div v-if="showComment || showRepost" v-loading="loading"
          :element-loading-spinner="svg"
          element-loading-background="rgba(0, 0, 0, 0.8)"
          element-loading-svg-view-box="-10, -10, 50, 50"
          element-loading-text="加载中..."
     >
       <el-scrollbar ref="scrollbar" height="400px">
-        <div v-infinite-scroll="getStatusComments" :infinite-scroll-disabled="comments.params.maxId===0">
-          <div v-for="id in comments.data" style="margin-top: 2px">
+        <div v-infinite-scroll="getStatusComments" :infinite-scroll-disabled="(showComment?comments:(showRepost?reposts:{})).params.maxId===0">
+          <div v-for="id in (showComment?comments:(showRepost?reposts:{})).data" style="margin-top: 2px">
             <wb-status-card :id="id" is-comment />
           </div>
           <div style="text-align: center">
-            <div v-if="comments.params.maxId!==0">
+            <div v-if="(showComment?comments:(showRepost?reposts:{})).params.maxId!==0">
               加载中...
             </div>
             <div v-else>
@@ -84,7 +84,7 @@
 </template>
 <script>
 import {CircleCheck, Comment, Share} from "@element-plus/icons-vue";
-import {cancelLike, setLike} from "@/assets/js/request/statuses";
+import {cancelLike, destroyLike, setLike, updateLike} from "@/assets/js/request/statuses";
 import {ElMessage} from "element-plus";
 import {mapActions, mapState} from "vuex";
 import WbStatusCard from "@/components/weibo/WbStatusCard";
@@ -99,6 +99,13 @@ export default {
       showComment: false,
       showRepost: false,
       comments: {
+        params: {
+          flow: 1,
+          maxId: undefined,
+        },
+        data: [],
+      },
+      reposts: {
         params: {
           flow: 1,
           maxId: undefined,
@@ -146,17 +153,34 @@ export default {
       })
     },
     switchLike() {
-      if (this.liked) {
-        cancelLike(this.id).then(() => {
-          ElMessage.success("取消成功")
-          return this.liked = !this.liked;
-        })
+      if (this.isComment) {
+        if (this.liked) {
+          destroyLike(this.id).then(() => {
+            ElMessage.success("取消成功")
+            this.counts.attitudes--
+            return this.liked = !this.liked;
+          })
+        } else {
+          updateLike(this.id).then(() => {
+            this.liked = !this.liked
+            this.counts.attitudes++
+            ElMessage.success("点赞成功")
+          })
+        }
       } else {
-        setLike(this.id).then(res => {
-          this.liked = !this.liked
-          this.counts.attitudes = res
-          ElMessage.success("点赞成功")
-        })
+
+        if (this.liked) {
+          cancelLike(this.id).then(() => {
+            ElMessage.success("取消成功")
+            return this.liked = !this.liked;
+          })
+        } else {
+          setLike(this.id).then(res => {
+            this.liked = !this.liked
+            this.counts.attitudes = res
+            ElMessage.success("点赞成功")
+          })
+        }
       }
     }
   },
